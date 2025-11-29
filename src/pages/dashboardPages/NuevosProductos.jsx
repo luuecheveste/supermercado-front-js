@@ -35,7 +35,7 @@ const NuevoProducto = () => {
       // 2) Subir la imagen si existe
      let imageUrl = "";
      if (data.imagen && data.imagen[0]) {
-       const uploadResult = await uploadImage(productId, data.imagen[0]);
+       const uploadResult = await uploadImage(data.imagen[0]);
        imageUrl = uploadResult?.filename ? `/imagenes/${uploadResult.filename}` : "";
      }
       // 3) Actualizar el producto con la imagen

@@ -19,7 +19,7 @@ function useCategoria() {
    try {
      const res = await createCategoria(categoriaData);
      alert("Categoría creada correctamente");
-     return res.data.data;
+     return res.data;
    } catch (err) {
      console.error("Error al crear la categoría:", err);
      alert("Error al crear la categoría");

@@ -86,20 +86,21 @@ export const getTotalStock = async () => {
 export const createProduct = async (data) =>
   (await axios.post(`${API_URL}/api/producto`, data)).data;
 
-export const uploadImage = async (id, imageFile) => {
+export const uploadImage = async (imageFile) => {
   const formData = new FormData();
   formData.append("imagen", imageFile);
 
   const res = await axios.post(
-    `${API_URL}/api/producto/${id}/upload`,
+    `${API_URL}/api/producto/imagen`,
     formData,
     {
       headers: { "Content-Type": "multipart/form-data" },
     }
   );
 
-  return res.data;
+  return res.data; // retornar { filename: 'xxx' }
 };
+
 
 
 // ---------------------- VENTAS ----------------------
