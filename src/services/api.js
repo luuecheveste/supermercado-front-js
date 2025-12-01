@@ -80,7 +80,7 @@ export const updateProduct = async (id, data) =>
 
 export const getTotalStock = async () => {
   const res = await axios.get(`${API_URL}/api/producto/stocktotal`);
-  return res.data; 
+  return res.data.stocktotal; 
 };
 
 export const createProduct = async (data) =>
