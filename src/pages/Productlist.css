@@ -89,3 +89,15 @@
     text-align: center;
   }
 }
+.search-input {
+  color: black !important;
+  background-color: white !important;
+  border: 2px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.search-input::placeholder {
+  color: #777 !important;
+}
