@@ -39,7 +39,7 @@ function useProducts() {
     queryFn: getTotalStock,
   });
   const totalStock = totalStockData?.data?.stocktotal ?? 0;
-  
+
   // ------- Mutaciones -------
   const updateProductFn = async ({ Productid, param }) => {
     if (!Productid || isNaN(Number(Productid))) throw new Error("ID inválido");
@@ -55,17 +55,18 @@ function useProducts() {
 
 
   // ------- Búsquedas -------
-  const safeSearchByName = async (term) => {
-    if (!term) return [];
-    const response = await searchProductsByName(term);
-    return response?.data ?? [];
-  };
+ const safeSearchByName = async (term) => {
+  if (!term) return [];
+  const data = await searchProductsByName(term);
+  return Array.isArray(data) ? data : [];
+};
 
-  const safeSearchByCategoria = async (categoriaId) => {
-    if (!categoriaId) return [];
-    const response = await searchProductsByCategoria(Number(categoriaId));
-    return response?.data ?? [];
-  };
+const safeSearchByCategoria = async (categoriaId) => {
+  if (!categoriaId) return [];
+  const data = await searchProductsByCategoria(Number(categoriaId));
+  return Array.isArray(data) ? data : [];
+};
+
 
 
   return {

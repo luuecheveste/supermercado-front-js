@@ -71,7 +71,7 @@ export const searchProductsByName = async (param) => {
 };
 
 export const searchProductsByCategoria = async (categoriaId) => {
-  const res = await axios.get(`${API_URL}/api/producto/categoria?categoriaId=${categoriaId}`);
+  const res = await axios.get(`${API_URL}/api/producto/buscar-categoria?categoriaId=${categoriaId}`);
   return res.data.data;
 };
 
