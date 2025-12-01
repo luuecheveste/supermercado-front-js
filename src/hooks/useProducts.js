@@ -38,9 +38,8 @@ function useProducts() {
     queryKey: ["totalStock"],
     queryFn: getTotalStock,
   });
-
-  const totalStock = totalStockData ?? 0;
-
+  const totalStock = totalStockData?.data?.stocktotal ?? 0;
+  
   // ------- Mutaciones -------
   const updateProductFn = async ({ Productid, param }) => {
     if (!Productid || isNaN(Number(Productid))) throw new Error("ID inválido");
