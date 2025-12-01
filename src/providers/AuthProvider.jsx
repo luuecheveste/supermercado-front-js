@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AuthContext } from "../contexts/auth";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // ✅ cambio para v4
-import {API_URL} from "./services/api.js";
+import {API_URL} from "../services/api.js";
 
 // Función para verificar expiración de JWT
 function isExpired(exp) {
