@@ -39,8 +39,7 @@ function useProducts() {
     queryFn: getTotalStock,
   });
 
-  const totalStock = totalStockData?.stocktotal ?? 0;
-
+  const totalStock = totalStockData ?? 0;
 
   // ------- Mutaciones -------
   const updateProductFn = async ({ Productid, param }) => {

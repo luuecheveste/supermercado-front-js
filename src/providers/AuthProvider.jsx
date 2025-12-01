@@ -1,22 +1,8 @@
-/* eslint-disable react-refresh/only-export-components */
-
-
 import { useState, useEffect } from "react";
 import { AuthContext } from "../contexts/auth";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // ✅ cambio para v4
-
-
-// URL del backend desde Vite
-export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-
-if (!import.meta.env.VITE_API_URL) {
- console.warn(
-   "VITE_API_URL no definida. Revisa tus variables de entorno."
- );
-}
-
+import {API_URL} from "./services/api.js";
 
 // Función para verificar expiración de JWT
 function isExpired(exp) {

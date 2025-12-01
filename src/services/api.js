@@ -66,12 +66,12 @@ export const getProducts = async () => {
 };
 
 export const searchProductsByName = async (param) => {
-  const res = await axios.get(`${API_URL}/api/producto/search?q=${param}`);
+  const res = await axios.get(`${API_URL}/api/producto/buscar?q=${param}`);
   return res.data.data;
 };
 
 export const searchProductsByCategoria = async (categoriaId) => {
-  const res = await axios.get(`${API_URL}/api/producto/categoria/${categoriaId}`);
+  const res = await axios.get(`${API_URL}/api/producto/categoria?categoriaId=${categoriaId}`);
   return res.data.data;
 };
 
@@ -80,7 +80,7 @@ export const updateProduct = async (id, data) =>
 
 export const getTotalStock = async () => {
   const res = await axios.get(`${API_URL}/api/producto/stocktotal`);
-  return res.data.stocktotal; // backend devuelve { stocktotal }
+  return res.data; 
 };
 
 export const createProduct = async (data) =>
@@ -91,11 +91,9 @@ export const uploadImage = async (id, imageFile) => {
   formData.append("imagen", imageFile);
 
   const res = await axios.post(
-    `${API_URL}/api/producto/${id}/upload`,
+    `${API_URL}/api/producto/${id}/imagen`,
     formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    }
+    { headers: { "Content-Type": "multipart/form-data" } }
   );
 
   return res.data;
