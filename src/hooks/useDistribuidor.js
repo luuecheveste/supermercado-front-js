@@ -7,25 +7,34 @@ import {
 } from "../services/api";
 
 function useDistribuidores(zonaId) {
+  if (!zonaId) throw new Error("useDistribuidores requiere un zonaId");
 
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch
-  } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["distribuidores", zonaId],
     queryFn: () => getDistribuidoresByZona(zonaId),
-    enabled: Boolean(zonaId), // solo corre si zonaId existe
+    enabled: Boolean(zonaId)
   });
 
-  // Normalización del resultado
   const distribuidores = Array.isArray(data)
     ? data
     : Array.isArray(data?.data)
       ? data.data
       : [];
+
+  const createDistribuidorFn = async (distribuidor) => {
+    if (!distribuidor.zona) distribuidor.zona = zonaId;
+    return createDistribuidor(distribuidor);
+  };
+
+  const updateDistribuidorFn = async (id, distribuidor) => {
+    if (!id) throw new Error("ID de distribuidor inválido");
+    return updateDistribuidor(id, distribuidor);
+  };
+
+  const deleteDistribuidorFn = async (id) => {
+    if (!id) throw new Error("ID de distribuidor inválido");
+    return deleteDistribuidor(id);
+  };
 
   return {
     distribuidores,
@@ -33,11 +42,9 @@ function useDistribuidores(zonaId) {
     isError,
     error,
     refetch,
-
-    // Mutaciones directas desde la API
-    createDistribuidor,
-    updateDistribuidor,
-    deleteDistribuidor
+    createDistribuidor: createDistribuidorFn,
+    updateDistribuidor: updateDistribuidorFn,
+    deleteDistribuidor: deleteDistribuidorFn
   };
 }
 
