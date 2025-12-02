@@ -1,71 +1,98 @@
 /* Contenedor principal */
 .zonas-distribuidores-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background: #ffffff;
+  background: #fdfdfd;
   border-radius: 16px;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   font-family: 'Inter', sans-serif;
   color: #2c3e50;
 }
 
 /* Títulos */
 .zonas-distribuidores-container h1 {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 /* Búsqueda */
 .search-container {
-  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 .search-input {
   width: 100%;
-  padding: 0.8rem 1rem;
+  max-width: 600px;
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
   border: 1px solid #dce1e6;
   border-radius: 12px;
-  font-size: 1rem;
   background-color: #f9f9f9;
   transition: all 0.2s;
 }
 .search-input:focus {
   outline: none;
   border-color: #667eea;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 
 /* Lista de zonas */
 .zonas-list h2 {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: 600;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 /* Card de zona */
 .zona-card {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.8rem;
+  margin-bottom: 1.8rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .zona-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Información zona */
+.zona-info {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+.zona-info div {
+  margin-bottom: 0.5rem;
+}
+
+/* Información distribuidor */
+.distribuidor-info {
+  background: #eef2ff;
+  border-left: 5px solid #667eea;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 1rem;
+  color: #495057;
+}
+.distribuidor-info.empty {
+  font-style: italic;
+  color: #6c757d;
 }
 
 /* Botones de acciones */
 .zona-actions {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+  align-self: flex-end;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.7rem;
 }
 .zona-edit,
 .zona-delete {
@@ -85,71 +112,51 @@
   transform: scale(1.2);
 }
 
-/* Información zona */
-.zona-info {
-  margin-bottom: 1rem;
+/* Formulario de creación */
+.nueva-zona-distribuidor {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
-.zona-info div {
-  margin-bottom: 0.4rem;
-  font-size: 1rem;
-  color: #34495e;
-}
-
-/* Información distribuidor */
-.distribuidor-info {
-  background: #eef2ff;
-  border-left: 5px solid #667eea;
-  border-radius: 10px;
-  padding: 1rem;
-  font-size: 0.95rem;
-  color: #495057;
-  margin-top: 0.5rem;
-}
-.distribuidor-info.empty {
-  font-style: italic;
-  color: #6c757d;
-}
-
-/* Formulario de creación y edición */
 .form-zona-distribuidor {
+  flex: 1 1 45%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-}
-.form-section {
   background: #f9f9f9;
-  padding: 1.5rem;
-  border-radius: 12px;
+  padding: 1.8rem;
+  border-radius: 16px;
   border: 1px solid #e0e0e0;
 }
-.form-section h4 {
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-  font-weight: 600;
+.form-zona-distribuidor h3 {
+  font-size: 1.5rem;
   text-align: center;
+  margin-bottom: 1rem;
 }
 .form-section input {
   width: 100%;
-  padding: 0.7rem 0.8rem;
+  padding: 0.8rem 1rem;
   border: 1px solid #dce1e6;
-  border-radius: 8px;
-  margin-bottom: 0.8rem;
+  border-radius: 10px;
   font-size: 1rem;
+  margin-bottom: 0.8rem;
   transition: all 0.2s;
 }
 .form-section input:focus {
   outline: none;
   border-color: #667eea;
-  background: #ffffff;
+  background: #fff;
 }
 
-/* Botones del formulario */
+/* Botones */
 .form-zona-distribuidor button {
   background: #667eea;
   color: #fff;
-  padding: 0.8rem 1.5rem;
-  border: none;
+  padding: 0.9rem 1.5rem;
   border-radius: 12px;
+  border: none;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
@@ -179,7 +186,7 @@
   padding: 2rem;
   border-radius: 16px;
   width: 90%;
-  max-width: 600px;
+  max-width: 650px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0,0,0,0.15);
@@ -190,29 +197,27 @@
   text-align: center;
   margin-bottom: 1.5rem;
 }
-
-/* Acciones del modal */
 .modal-actions {
   display: flex;
   gap: 1rem;
   justify-content: center;
   margin-top: 1rem;
 }
+.modal-actions button {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
 .modal-actions button[type="button"] {
   background: #6c757d;
   color: #fff;
-  padding: 0.7rem 1.2rem;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
 }
 .modal-actions button[type="submit"] {
   background: #667eea;
   color: #fff;
-  padding: 0.7rem 1.2rem;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
 }
 .modal-actions button:disabled {
   opacity: 0.6;
@@ -234,17 +239,18 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .nueva-zona-distribuidor {
+    flex-direction: column;
+  }
+}
 @media (max-width: 768px) {
   .zona-card {
-    padding: 1rem;
+    padding: 1.2rem;
   }
   .zona-actions {
-    position: static;
     justify-content: flex-end;
-    margin-bottom: 1rem;
-  }
-  .form-section {
-    padding: 1rem;
+    margin-bottom: 0.8rem;
   }
 }
 @media (max-width: 480px) {
