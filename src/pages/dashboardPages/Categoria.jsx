@@ -4,7 +4,8 @@ import useCategoria from "../../hooks/useCategoria";
 import "./Categoria.css";
 
 function NuevaCategoria() {
-  const { categorias, isLoading, createCategoria, refetchCategorias, updateCategoria, deleteCategoria, isCreating = false, searchCategoriasByName } = useCategoria();
+  const { categorias, isLoading, createCategoria, refetchCategorias, updateCategoria, deleteCategoria, searchCategoriasByName } = useCategoria();
+
   const { register, handleSubmit, reset, formState: { errors, isSubmitting }} = useForm();
   const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, formState: { errors: errorsEdit, isSubmitting: isSubmittingEdit }} = useForm();
 
@@ -12,8 +13,7 @@ function NuevaCategoria() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [isProcessingDelete, setIsProcessingDelete] = useState(false);
   const [isProcessingUpdate, setIsProcessingUpdate] = useState(false);
-  
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [displayedCategorias, setDisplayedCategorias] = useState([]);
 
@@ -29,8 +29,8 @@ function NuevaCategoria() {
   const handleSearch = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    
-    if (term.trim() === "") {
+
+    if (!term.trim()) {
       setDisplayedCategorias(categorias || []);
     } else {
       try {
@@ -45,14 +45,8 @@ function NuevaCategoria() {
 
   const onSubmit = async (data) => {
     try {
-      await createCategoria({ 
-        name: data.name, 
-        description: data.description 
-      });
-      
-      // Funcion que hace el refetch y limpia el texto de la barra de búsqueda
+      await createCategoria({ name: data.name, description: data.description });
       handleRefetch();
-      
       reset();
     } catch (error) {
       console.error("Error al crear la categoría:", error);
@@ -105,7 +99,7 @@ function NuevaCategoria() {
     <div className="categorias-container">
       <h2 className="categorias-title">Categorías</h2>
 
-      {/* Campo de búsqueda */}
+      {/* Búsqueda */}
       <div className="search-container">
         <input
           type="text"
@@ -116,6 +110,7 @@ function NuevaCategoria() {
         />
       </div>
 
+      {/* Lista de categorías */}
       <div className="categorias-list">
         {displayedCategorias?.map((cat) => (
           <div key={cat.id} className="categoria-card">
@@ -136,12 +131,8 @@ function NuevaCategoria() {
                 ✎
               </button>
             </div>
-            <div className="categoria-nombre">
-              {cat.name}
-            </div>
-            <div className="categoria-descripcion">
-              {cat.description}
-            </div>
+            <div className="categoria-nombre">{cat.name}</div>
+            <div className="categoria-descripcion">{cat.description}</div>
           </div>
         ))}
         {searchTerm && displayedCategorias.length === 0 && (
@@ -149,7 +140,7 @@ function NuevaCategoria() {
         )}
       </div>
 
-      {/* Modal de edición simple */}
+      {/* Modal de edición */}
       {editModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -181,13 +172,16 @@ function NuevaCategoria() {
 
               <div className="modal-actions">
                 <button type="button" onClick={closeEditModal}>Cancelar</button>
-                <button type="submit" disabled={isProcessingUpdate || isSubmittingEdit}>{isProcessingUpdate ? "Guardando..." : "Guardar"}</button>
+                <button type="submit" disabled={isProcessingUpdate || isSubmittingEdit}>
+                  {isProcessingUpdate ? "Guardando..." : "Guardar"}
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* Crear nueva categoría */}
       <div className="nueva-categoria">
         <h3 className="nueva-categoria-title">Nueva Categoría</h3>
         <form className="form-categoria" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -197,14 +191,8 @@ function NuevaCategoria() {
               placeholder="Nombre"
               {...register("name", {
                 required: "El nombre es obligatorio",
-                minLength: {
-                  value: 2,
-                  message: "El nombre debe tener al menos 2 caracteres"
-                },
-                pattern: {
-                  value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
-                  message: "Solo se permiten letras y espacios"
-                }
+                minLength: { value: 2, message: "El nombre debe tener al menos 2 caracteres" },
+                pattern: { value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/, message: "Solo se permiten letras y espacios" }
               })}
             />
             {errors.name && <p className="error-message">{errors.name.message}</p>}
@@ -215,20 +203,14 @@ function NuevaCategoria() {
               type="text"
               placeholder="Descripción"
               {...register("description", {
-                minLength: {
-                  value: 5,
-                  message: "La descripción debe tener al menos 5 caracteres"
-                }
+                minLength: { value: 5, message: "La descripción debe tener al menos 5 caracteres" }
               })}
             />
             {errors.description && <p className="error-message">{errors.description.message}</p>}
           </div>
 
-          <button 
-            type="submit" 
-            disabled={isSubmitting || isCreating}
-          >
-            {isSubmitting || isCreating ? "Creando..." : "Crear"}
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Creando..." : "Crear"}
           </button>
         </form>
       </div>
