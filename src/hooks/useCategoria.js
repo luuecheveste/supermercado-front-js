@@ -1,10 +1,10 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getCategorias,
   searchCategoriasByName,
-  createCategoria as apiCreateCategoria,
-  updateCategoria as apiUpdateCategoria,
-  deleteCategoria as apiDeleteCategoria
+  createCategoria,
+  updateCategoria,
+  deleteCategoria
 } from "../services/api";
 
 function useCategoria() {
@@ -12,45 +12,40 @@ function useCategoria() {
 
   const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ["categorias"],
-    queryFn: getCategorias,
+    queryFn: getCategorias, // ya devuelve los datos directamente
   });
 
-  const categorias = Array.isArray(data) ? data : []; // ya es un array desde el api.js
+  const createCategoriaFn = useMutation(createCategoria, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categorias"]);
+    },
+  });
 
-  const createCategoria = async (categoriaData) => {
-    const res = await apiCreateCategoria(categoriaData);
-    queryClient.invalidateQueries(["categorias"]);
-    return res; // ya devuelve el objeto creado
-  };
+  const updateCategoriaFn = useMutation(
+    ({ id, data }) => updateCategoria(id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["categorias"]);
+      },
+    }
+  );
 
-  const updateCategoria = async (id, categoriaData) => {
-    const res = await apiUpdateCategoria(id, categoriaData);
-    queryClient.invalidateQueries(["categorias"]);
-    return res;
-  };
-
-  const deleteCategoria = async (id) => {
-    const res = await apiDeleteCategoria(id);
-    queryClient.invalidateQueries(["categorias"]);
-    return res;
-  };
-
-  const searchCategoriasByNameFn = async (term) => {
-    if (!term) return [];
-    const res = await searchCategoriasByName(term);
-    return Array.isArray(res) ? res : [];
-  };
+  const deleteCategoriaFn = useMutation(deleteCategoria, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categorias"]);
+    },
+  });
 
   return {
-    categorias,
+    categorias: data || [],
     isError,
     error,
     isLoading,
     refetchCategorias: refetch,
-    createCategoria,
-    updateCategoria,
-    deleteCategoria,
-    searchCategoriasByName: searchCategoriasByNameFn,
+    createCategoria: createCategoriaFn.mutateAsync,
+    updateCategoria: updateCategoriaFn.mutateAsync,
+    deleteCategoria: deleteCategoriaFn.mutateAsync,
+    searchCategoriasByName,
   };
 }
 
