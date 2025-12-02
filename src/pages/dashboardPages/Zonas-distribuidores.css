@@ -2,16 +2,16 @@
 .zonas-distribuidores-container {
   max-width: 900px;
   margin: 2rem auto;
-  padding: 1.5rem;
+  padding: 1rem;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
   font-family: 'Inter', sans-serif;
 }
 
 /* Título */
 .zonas-distribuidores-container h1 {
-  font-size: 1.8rem;
+  font-size: 1.7rem;
   font-weight: 700;
   color: #2c3e50;
   text-align: center;
@@ -20,16 +20,16 @@
 
 /* Búsqueda */
 .search-container {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 .search-input {
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 0.7rem 1rem;
   border: 1px solid #dce1e6;
   border-radius: 8px;
   font-size: 1rem;
   color: #2c3e50;
-  background-color: #f9f9f9;
+  background-color: #fdfdfd;
   transition: border 0.2s, background 0.2s;
 }
 .search-input:focus {
@@ -43,20 +43,21 @@
 .zonas-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 .zona-card {
-  background: #f5f7fa;
+  background: #f9fafc;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 0.8rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: transform 0.2s;
+  gap: 0.4rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 .zona-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
 }
 .zona-header {
   display: flex;
@@ -65,7 +66,7 @@
 }
 .zona-header h3 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   color: #2c3e50;
 }
 .zona-actions button {
@@ -79,25 +80,23 @@
 .zona-actions button:hover {
   transform: scale(1.2);
 }
-.zona-actions button:first-child:hover {
-  color: #e74c3c; /* eliminar */
-}
-.zona-actions button:last-child:hover {
-  color: #667eea; /* editar */
-}
+.zona-actions button:first-child:hover { color: #e74c3c; }
+.zona-actions button:last-child:hover { color: #667eea; }
 .zona-description {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: #34495e;
+  margin-left: 0.2rem;
 }
 
 /* Distribuidores */
 .distribuidor-card {
   background: #ffffff;
   border-left: 4px solid #667eea;
-  padding: 0.8rem;
+  padding: 0.6rem 0.8rem;
   border-radius: 6px;
   font-size: 0.9rem;
   color: #2c3e50;
+  margin-left: 0.5rem;
 }
 .distribuidor-card.empty {
   font-style: italic;
@@ -106,25 +105,25 @@
 
 /* Formularios */
 .form-section {
-  background: #f9f9f9;
-  padding: 1rem;
+  background: #f4f6fa;
+  padding: 0.8rem;
   border-radius: 8px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.6rem;
 }
 .form-section h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
+  margin: 0 0 0.3rem 0;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #2c3e50;
 }
 input {
-  padding: 0.6rem 0.8rem;
+  padding: 0.55rem 0.75rem;
   border: 1px solid #dce1e6;
   border-radius: 6px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: #2c3e50;
   background-color: #ffffff;
 }
@@ -138,11 +137,11 @@ input:focus {
 /* Botones */
 button {
   cursor: pointer;
-  padding: 0.6rem 1.2rem;
+  padding: 0.55rem 1.1rem;
   border-radius: 8px;
   border: none;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   transition: all 0.2s;
 }
 button.btn-submit {
@@ -161,26 +160,26 @@ button:disabled {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.35);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: 0.8rem;
 }
 .modal {
   background: #ffffff;
-  padding: 1.5rem;
+  padding: 1.2rem;
   border-radius: 10px;
   width: 90%;
-  max-width: 500px;
+  max-width: 450px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.12);
 }
 .modal h3 {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
   text-align: center;
   color: #2c3e50;
 }
@@ -190,11 +189,11 @@ button:disabled {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: 0.8rem;
 }
 .modal-actions button {
-  font-size: 0.9rem;
-  padding: 0.5rem 1rem;
+  font-size: 0.88rem;
+  padding: 0.45rem 0.9rem;
 }
 .modal-actions button[type="submit"] {
   background-color: #667eea;
@@ -216,15 +215,15 @@ button:disabled {
 /* Responsive */
 @media (max-width: 768px) {
   .zona-card {
-    padding: 0.8rem;
+    padding: 0.6rem 0.8rem;
   }
   .form-section {
-    padding: 0.8rem;
+    padding: 0.6rem;
   }
 }
 @media (max-width: 480px) {
   .modal {
-    padding: 1rem;
+    padding: 0.8rem;
   }
   .modal-actions {
     flex-direction: column;
@@ -233,4 +232,3 @@ button:disabled {
     width: 100%;
   }
 }
-
