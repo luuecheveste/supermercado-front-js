@@ -8,7 +8,7 @@ const ZonaDistribuidor = () => {
   const { createZona, deleteZona, zonas, isLoading, refetchZonas, updateZona, searchZonasByName } = useZonas();
   const { createDistribuidor, deleteDistribuidor, updateDistribuidor } = useDistribuidor();
 
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit } = useForm();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -27,22 +27,21 @@ const ZonaDistribuidor = () => {
     const term = e.target.value;
     setSearchTerm(term);
 
-    if (!term.trim()) {
+    if (term.trim() === "") {
       setDisplayedZonas(zonas || []);
-      return;
-    }
-
-    try {
-      const result = await searchZonasByName(term);
-      setDisplayedZonas(result || []);
-    } catch {
-      setDisplayedZonas([]);
+    } else {
+      try {
+        const result = await searchZonasByName(term);
+        setDisplayedZonas(result || []);
+      } catch {
+        setDisplayedZonas([]);
+      }
     }
   };
 
-  const refreshList = () => {
-    setSearchTerm("");
-    refetchZonas();
+  const handleRefetchZonas = async () => {
+    await refetchZonas();
+    setDisplayedZonas(zonas || []);
   };
 
   const onSubmit = async (data) => {
@@ -59,13 +58,13 @@ const ZonaDistribuidor = () => {
       };
 
       await createDistribuidor(distribuidorData);
+      await handleRefetchZonas();
 
-      refreshList();
+      alert('Zona y distribuidor creados correctamente!');
       reset();
-      alert('Zona y distribuidor creados exitosamente!');
     } catch (err) {
       console.error(err);
-      alert('Error al crear la zona y distribuidor');
+      alert('Error al crear zona y distribuidor');
     }
   };
 
@@ -75,11 +74,12 @@ const ZonaDistribuidor = () => {
       setIsProcessingDelete(true);
       await deleteZona(zonaId);
       if (distribuidorId) await deleteDistribuidor(distribuidorId);
-      refreshList();
-      alert('Zona y distribuidor eliminados correctamente');
+
+      await handleRefetchZonas();
+      alert('Zona y distribuidor eliminados correctamente!');
     } catch (err) {
       console.error(err);
-      alert('Error al eliminar zona o distribuidor');
+      alert('Error al eliminar zona y distribuidor');
     } finally {
       setIsProcessingDelete(false);
     }
@@ -129,12 +129,12 @@ const ZonaDistribuidor = () => {
         });
       }
 
-      refreshList();
+      await handleRefetchZonas();
+      alert('Zona y distribuidor actualizados correctamente!');
       closeEditModal();
-      alert('Zona y distribuidor actualizados exitosamente!');
     } catch (err) {
       console.error(err);
-      alert('Error al actualizar zona o distribuidor');
+      alert('Error al actualizar zona y distribuidor');
     } finally {
       setIsProcessingUpdate(false);
     }
@@ -224,7 +224,7 @@ const ZonaDistribuidor = () => {
 
       <div className="nueva-zona-distribuidor">
         <h2>Crear Nueva Zona con Distribuidor</h2>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="nuevo-producto-form">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="form-section">
             <h3>Datos de la Zona</h3>
             <input {...register("zonaName", { required: true })} type="text" placeholder="Nombre de la zona" />
@@ -239,8 +239,8 @@ const ZonaDistribuidor = () => {
             <input {...register("distribuidorValorEntrega", { required: true })} type="number" step="0.01" min="0" placeholder="Valor de entrega" />
           </div>
 
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creando..." : "Crear Zona y Distribuidor"}
+          <button type="submit">
+            Crear Zona y Distribuidor
           </button>
         </form>
       </div>
