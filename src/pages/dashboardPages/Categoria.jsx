@@ -4,17 +4,17 @@ import useCategoria from "../../hooks/useCategoria";
 import "./Categoria.css";
 
 function NuevaCategoria() {
-  const { 
-    categorias, 
-    isLoading, 
-    createCategoria, 
-    refetchCategorias, 
-    updateCategoria, 
-    deleteCategoria, 
-    searchCategoriasByName 
+  const {
+    categorias,
+    isLoading,
+    createCategoria,
+    refetchCategorias,
+    updateCategoria,
+    deleteCategoria,
+    searchCategoriasByName,
   } = useCategoria();
 
-  const { register, handleSubmit, reset, formState:  isSubmitting } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit } = useForm();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -37,7 +37,7 @@ function NuevaCategoria() {
   const handleSearch = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    
+
     if (term.trim() === "") {
       setDisplayedCategorias(categorias || []);
     } else {
@@ -45,7 +45,7 @@ function NuevaCategoria() {
         const result = await searchCategoriasByName(term);
         setDisplayedCategorias(result || []);
       } catch (error) {
-        console.error(error);
+        console.error("Error en búsqueda:", error);
         setDisplayedCategorias([]);
       }
     }
@@ -54,12 +54,10 @@ function NuevaCategoria() {
   const onSubmit = async (data) => {
     try {
       await createCategoria({ name: data.name, description: data.description });
-      alert("Categoría creada exitosamente");
       handleRefetch();
       reset();
     } catch (error) {
-      console.error(error);
-      alert("Error al crear la categoría");
+      console.error("Error al crear la categoría:", error);
     }
   };
 
@@ -69,11 +67,9 @@ function NuevaCategoria() {
     try {
       setIsProcessingDelete(true);
       await deleteCategoria(id);
-      alert("Categoría eliminada correctamente");
       handleRefetch();
-    } catch (error) {
-      console.error(error);
-      alert("Error al eliminar categoría");
+    } catch (err) {
+      console.error("Error al eliminar categoría:", err);
     } finally {
       setIsProcessingDelete(false);
     }
@@ -96,12 +92,10 @@ function NuevaCategoria() {
     try {
       setIsProcessingUpdate(true);
       await updateCategoria(editingCategory.id, { name: data.name, description: data.description });
-      alert("Categoría actualizada correctamente");
       handleRefetch();
       closeEditModal();
-    } catch (error) {
-      console.error(error);
-      alert("Error al actualizar categoría");
+    } catch (err) {
+      console.error("Error al actualizar categoría:", err);
     } finally {
       setIsProcessingUpdate(false);
     }
@@ -153,7 +147,7 @@ function NuevaCategoria() {
         )}
       </div>
 
-      {/* Modal de edición */}
+      {/* Modal de edición simple */}
       {editModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -163,9 +157,14 @@ function NuevaCategoria() {
                 <input
                   type="text"
                   placeholder="Nombre"
-                  {...registerEdit("name", { required: true, minLength: 2 })}
+                  {...registerEdit("name", {
+                    required: true,
+                    minLength: 2,
+                    pattern: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
+                  })}
                 />
               </div>
+
               <div className="form-group">
                 <input
                   type="text"
@@ -173,6 +172,7 @@ function NuevaCategoria() {
                   {...registerEdit("description", { minLength: 5 })}
                 />
               </div>
+
               <div className="modal-actions">
                 <button type="button" onClick={closeEditModal}>Cancelar</button>
                 <button type="submit" disabled={isProcessingUpdate}>
@@ -184,7 +184,6 @@ function NuevaCategoria() {
         </div>
       )}
 
-      {/* Form de nueva categoría */}
       <div className="nueva-categoria">
         <h3 className="nueva-categoria-title">Nueva Categoría</h3>
         <form className="form-categoria" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -192,9 +191,14 @@ function NuevaCategoria() {
             <input
               type="text"
               placeholder="Nombre"
-              {...register("name", { required: true, minLength: 2 })}
+              {...register("name", {
+                required: true,
+                minLength: 2,
+                pattern: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
+              })}
             />
           </div>
+
           <div className="form-group">
             <input
               type="text"
@@ -202,8 +206,9 @@ function NuevaCategoria() {
               {...register("description", { minLength: 5 })}
             />
           </div>
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creando..." : "Crear"}
+
+          <button type="submit">
+            Crear
           </button>
         </form>
       </div>

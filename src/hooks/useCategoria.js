@@ -10,18 +10,20 @@ import {
 function useCategoria() {
   const queryClient = useQueryClient();
 
+  // Query para obtener categorías
   const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ["categorias"],
     queryFn: getCategorias,
   });
 
-  const categorias = data || [];
+  const categorias = data ?? [];
 
-  const createCategoriaFn = useMutation({
+  // Mutation para crear
+  const createCategoriaMutation = useMutation({
     mutationFn: createCategoria,
     onSuccess: () => {
       queryClient.invalidateQueries(["categorias"]);
-      alert("Categoría creada exitosamente");
+      alert("Categoría creada correctamente");
     },
     onError: (err) => {
       console.error(err);
@@ -29,11 +31,12 @@ function useCategoria() {
     },
   });
 
-  const updateCategoriaFn = useMutation({
+  // Mutation para actualizar
+  const updateCategoriaMutation = useMutation({
     mutationFn: ({ id, data }) => updateCategoria(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(["categorias"]);
-      alert("Categoría actualizada exitosamente");
+      alert("Categoría actualizada correctamente");
     },
     onError: (err) => {
       console.error(err);
@@ -41,11 +44,12 @@ function useCategoria() {
     },
   });
 
-  const deleteCategoriaFn = useMutation({
+  // Mutation para eliminar
+  const deleteCategoriaMutation = useMutation({
     mutationFn: deleteCategoria,
     onSuccess: () => {
       queryClient.invalidateQueries(["categorias"]);
-      alert("Categoría eliminada exitosamente");
+      alert("Categoría eliminada correctamente");
     },
     onError: (err) => {
       console.error(err);
@@ -53,20 +57,30 @@ function useCategoria() {
     },
   });
 
-  const searchCategoriasByNameFn = async (param) => {
-    if (!param) return categorias;
-    return await searchCategoriasByName(param);
+  // Función para buscar categorías por nombre
+  const searchCategoriasByNameFn = async (term) => {
+    if (!term) return [];
+    try {
+      const res = await searchCategoriasByName(term);
+      return res ?? [];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
   };
 
   return {
     categorias,
-    isLoading,
     isError,
     error,
+    isLoading,
     refetchCategorias: refetch,
-    createCategoria: createCategoriaFn.mutateAsync,
-    updateCategoria: updateCategoriaFn.mutateAsync,
-    deleteCategoria: deleteCategoriaFn.mutateAsync,
+    createCategoria: createCategoriaMutation.mutateAsync,
+    createLoading: createCategoriaMutation.isLoading,
+    updateCategoria: updateCategoriaMutation.mutateAsync,
+    updateLoading: updateCategoriaMutation.isLoading,
+    deleteCategoria: deleteCategoriaMutation.mutateAsync,
+    deleteLoading: deleteCategoriaMutation.isLoading,
     searchCategoriasByName: searchCategoriasByNameFn,
   };
 }
