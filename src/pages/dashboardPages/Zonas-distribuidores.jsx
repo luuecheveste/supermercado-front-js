@@ -26,24 +26,28 @@ const ZonasDistribuidores = () => {
   const [displayedZonas, setDisplayedZonas] = useState([]);
 
   const { register, handleSubmit, reset } = useForm();
-  const {
-    register: registerEdit,
-    handleSubmit: handleSubmitEdit,
-    reset: resetEdit,
-  } = useForm();
+  const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit } = useForm();
 
-  // Mantener la lista de zonas actualizada
   useEffect(() => {
-    setDisplayedZonas(zonas || []);
+    setDisplayedZonas(Array.isArray(zonas) ? zonas : []);
   }, [zonas]);
 
   const handleSearch = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    if (!term.trim()) return setDisplayedZonas(zonas);
 
-    const results = await searchZonasByName(term);
-    setDisplayedZonas(results || []);
+    if (!term.trim()) {
+      setDisplayedZonas(Array.isArray(zonas) ? zonas : []);
+      return;
+    }
+
+    try {
+      const results = await searchZonasByName(term);
+      setDisplayedZonas(Array.isArray(results) ? results : []);
+    } catch (err) {
+      console.error(err);
+      setDisplayedZonas([]);
+    }
   };
 
   const onSubmit = async (data) => {
@@ -62,19 +66,19 @@ const ZonasDistribuidores = () => {
         zona: zonaCreada.data.id,
       });
 
-      alert("Zona y distribuidor creados exitosamente ✅");
+      alert("Zona y distribuidor creados exitosamente");
       reset();
-      const nuevasZonas = await refetchZonas();
-      setDisplayedZonas(nuevasZonas || []);
+      await refetchZonas();
+      setDisplayedZonas(zonas);
     } catch (err) {
       console.error(err);
-      alert("Error al crear zona o distribuidor ❌");
+      alert("Error al crear zona o distribuidor");
     }
   };
 
   const openEditModal = (zona) => {
     setEditingZona(zona);
-    const distribuidor = zona.distribuidores?.[0] || null;
+    const distribuidor = Array.isArray(zona.distribuidores) ? zona.distribuidores[0] : null;
     setEditingDistribuidor(distribuidor);
     setSelectedZonaId(zona.id);
 
@@ -112,13 +116,13 @@ const ZonasDistribuidores = () => {
         });
       }
 
-      alert("Zona y distribuidor actualizados exitosamente ✅");
-      const nuevasZonas = await refetchZonas();
-      setDisplayedZonas(nuevasZonas || []);
+      alert("Zona y distribuidor actualizados exitosamente");
+      await refetchZonas();
+      setDisplayedZonas(zonas);
       setEditModalOpen(false);
     } catch (err) {
       console.error(err);
-      alert("Error al actualizar zona o distribuidor ❌");
+      alert("Error al actualizar zona o distribuidor");
     }
   };
 
@@ -127,22 +131,21 @@ const ZonasDistribuidores = () => {
 
     try {
       const zona = zonas.find((z) => z.id === zonaId);
-      const distribuidorId = zona?.distribuidores?.[0]?.id;
+      const distribuidorId = Array.isArray(zona.distribuidores) ? zona.distribuidores[0]?.id : null;
 
-      // Eliminamos ambos en paralelo
       await Promise.all([
         distribuidorId ? deleteDistribuidor(distribuidorId) : Promise.resolve(),
         deleteZona(zonaId),
       ]);
 
-      const nuevasZonas = await refetchZonas();
-      setDisplayedZonas(nuevasZonas || []);
-      alert("Zona y distribuidor eliminados correctamente!✅"); 
+      alert("Zona y distribuidor eliminados correctamente");
+      await refetchZonas();
+      setDisplayedZonas(zonas);
     } catch (err) {
-      console.error(err); 
-      alert("Error al eliminar zona o distribuidor ❌");
+      console.error(err);
+      alert("Error al eliminar zona o distribuidor");
     }
-  }; 
+  };
 
   if (loadingZonas)
     return <p className="loading-message">Cargando zonas...</p>;
@@ -170,9 +173,9 @@ const ZonasDistribuidores = () => {
           </p>
         )}
         {displayedZonas.map((zona) => {
-          const distribuidor = zona.distribuidores?.[0] || null;
+          const distribuidor = Array.isArray(zona.distribuidores) ? zona.distribuidores[0] : null;
           return (
-            <div key={zona.id} className="zona-card compact">
+            <div key={zona.id} className="zona-card">
               <div className="zona-actions-floating">
                 <button
                   onClick={() => handleDelete(zona.id)}
@@ -189,18 +192,16 @@ const ZonasDistribuidores = () => {
               </div>
 
               <div className="zona-content">
-                <h3>{zona.name}</h3>
+                <h3 className="zona-title">{zona.name}</h3>
                 <p className="zona-description">{zona.description}</p>
 
                 {distribuidor ? (
                   <div className="distribuidor-card compact">
                     <p>
-                      <strong>Distribuidor:</strong> {distribuidor.name}{" "}
-                      {distribuidor.apellido}
+                      <strong>Distribuidor:</strong> {distribuidor.name} {distribuidor.apellido}
                     </p>
                     <p>
-                      <strong>DNI:</strong> {distribuidor.dni} |{" "}
-                      <strong>Valor entrega:</strong> ${distribuidor.valorEntrega}
+                      <strong>DNI:</strong> {distribuidor.dni} | <strong>Valor entrega:</strong> ${distribuidor.valorEntrega}
                     </p>
                   </div>
                 ) : (
@@ -230,17 +231,10 @@ const ZonasDistribuidores = () => {
                 <input {...registerEdit("distribuidorName")} placeholder="Nombre" />
                 <input {...registerEdit("distribuidorApellido")} placeholder="Apellido" />
                 <input {...registerEdit("distribuidorDni")} placeholder="DNI" />
-                <input
-                  {...registerEdit("distribuidorValorEntrega")}
-                  placeholder="Valor de entrega"
-                  type="number"
-                  step="0.01"
-                />
+                <input {...registerEdit("distribuidorValorEntrega")} placeholder="Valor de entrega" type="number" step="0.01" />
               </div>
               <div className="modal-actions">
-                <button type="button" onClick={() => setEditModalOpen(false)}>
-                  Cancelar
-                </button>
+                <button type="button" onClick={() => setEditModalOpen(false)}>Cancelar</button>
                 <button type="submit">Guardar</button>
               </div>
             </form>
@@ -262,16 +256,9 @@ const ZonasDistribuidores = () => {
             <input {...register("distribuidorName")} placeholder="Nombre" />
             <input {...register("distribuidorApellido")} placeholder="Apellido" />
             <input {...register("distribuidorDni")} placeholder="DNI" />
-            <input
-              {...register("distribuidorValorEntrega")}
-              placeholder="Valor de entrega"
-              type="number"
-              step="0.01"
-            />
+            <input {...register("distribuidorValorEntrega")} placeholder="Valor de entrega" type="number" step="0.01" />
           </div>
-          <button type="submit" className="btn-submit">
-            Crear
-          </button>
+          <button type="submit" className="btn-submit">Crear</button>
         </form>
       </div>
     </div>
