@@ -217,3 +217,4 @@ function NuevaCategoria() {
 }
 
 export default NuevaCategoria;
+
