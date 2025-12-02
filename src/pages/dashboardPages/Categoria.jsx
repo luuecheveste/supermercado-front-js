@@ -4,16 +4,23 @@ import useCategoria from "../../hooks/useCategoria";
 import "./Categoria.css";
 
 function NuevaCategoria() {
-  const { categorias, isLoading, createCategoria, refetchCategorias, updateCategoria, deleteCategoria, searchCategoriasByName } = useCategoria();
+  const {
+    categorias,
+    isLoading,
+    createCategoria,
+    refetchCategorias,
+    updateCategoria,
+    deleteCategoria,
+    searchCategoriasByName
+  } = useCategoria();
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting }} = useForm();
-  const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, formState: { errors: errorsEdit, isSubmitting: isSubmittingEdit }} = useForm();
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
+  const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, formState: { errors: errorsEdit, isSubmitting: isSubmittingEdit } } = useForm();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [isProcessingDelete, setIsProcessingDelete] = useState(false);
   const [isProcessingUpdate, setIsProcessingUpdate] = useState(false);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [displayedCategorias, setDisplayedCategorias] = useState([]);
 
@@ -49,13 +56,13 @@ function NuevaCategoria() {
       handleRefetch();
       reset();
     } catch (error) {
-      console.error("Error al crear la categoría:", error);
+      console.error("Error al crear categoría:", error);
     }
   };
 
   const handleDelete = async (id) => {
-    const ok = window.confirm("¿Eliminar esta categoría?");
-    if (!ok) return;
+    if (!window.confirm("¿Eliminar esta categoría?")) return;
+
     try {
       setIsProcessingDelete(true);
       await deleteCategoria(id);
@@ -81,6 +88,7 @@ function NuevaCategoria() {
 
   const onEditSubmit = async (data) => {
     if (!editingCategory) return;
+
     try {
       setIsProcessingUpdate(true);
       await updateCategoria(editingCategory.id, { name: data.name, description: data.description });
@@ -99,7 +107,6 @@ function NuevaCategoria() {
     <div className="categorias-container">
       <h2 className="categorias-title">Categorías</h2>
 
-      {/* Búsqueda */}
       <div className="search-container">
         <input
           type="text"
@@ -110,7 +117,6 @@ function NuevaCategoria() {
         />
       </div>
 
-      {/* Lista de categorías */}
       <div className="categorias-list">
         {displayedCategorias?.map((cat) => (
           <div key={cat.id} className="categoria-card">
@@ -135,12 +141,9 @@ function NuevaCategoria() {
             <div className="categoria-descripcion">{cat.description}</div>
           </div>
         ))}
-        {searchTerm && displayedCategorias.length === 0 && (
-          <p>No se encontraron categorías</p>
-        )}
+        {searchTerm && displayedCategorias.length === 0 && <p>No se encontraron categorías</p>}
       </div>
 
-      {/* Modal de edición */}
       {editModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -158,7 +161,6 @@ function NuevaCategoria() {
                 />
                 {errorsEdit?.name && <p className="error-message">{errorsEdit.name.message}</p>}
               </div>
-
               <div className="form-group">
                 <input
                   type="text"
@@ -169,7 +171,6 @@ function NuevaCategoria() {
                 />
                 {errorsEdit?.description && <p className="error-message">{errorsEdit.description.message}</p>}
               </div>
-
               <div className="modal-actions">
                 <button type="button" onClick={closeEditModal}>Cancelar</button>
                 <button type="submit" disabled={isProcessingUpdate || isSubmittingEdit}>
@@ -181,7 +182,6 @@ function NuevaCategoria() {
         </div>
       )}
 
-      {/* Crear nueva categoría */}
       <div className="nueva-categoria">
         <h3 className="nueva-categoria-title">Nueva Categoría</h3>
         <form className="form-categoria" onSubmit={handleSubmit(onSubmit)} noValidate>

@@ -1,56 +1,45 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getCategorias,
   searchCategoriasByName,
-  createCategoria,
-  updateCategoria,
-  deleteCategoria
+  createCategoria as apiCreateCategoria,
+  updateCategoria as apiUpdateCategoria,
+  deleteCategoria as apiDeleteCategoria
 } from "../services/api";
 
 function useCategoria() {
+  const queryClient = useQueryClient();
+
+  // Trae todas las categorías
   const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ["categorias"],
     queryFn: getCategorias,
   });
 
-  const categorias = data?.data ?? [];
+  const categorias = data?.data ?? []; // <-- el array real de categorías
 
-  const createCategoriaFn = async (categoriaData) => {
-    try {
-      const res = await createCategoria(categoriaData);
-      alert("Categoría creada correctamente");
-      return res.data.data;
-    } catch (err) {
-      console.error("Error al crear la categoría:", err);
-      alert("Error al crear la categoría");
-      throw err;
-    }
+  // Crear categoría
+  const createCategoria = async (categoriaData) => {
+    const res = await apiCreateCategoria(categoriaData);
+    queryClient.invalidateQueries(["categorias"]);
+    return res.data?.data ?? res.data; // evita usar data.data.data
   };
 
-  const updateCategoriaFn = async (id, categoriaData) => {
-    try {
-      const res = await updateCategoria(id, categoriaData);
-      alert("Categoría actualizada correctamente");
-      return res.data; // corregido: el backend no devuelve `data`
-    } catch (err) {
-      console.error("Error al actualizar la categoría:", err);
-      alert("Error al actualizar la categoría");
-      throw err;
-    }
+  // Actualizar categoría
+  const updateCategoria = async (id, categoriaData) => {
+    const res = await apiUpdateCategoria(id, categoriaData);
+    queryClient.invalidateQueries(["categorias"]);
+    return res.data?.data ?? res.data;
   };
 
-  const deleteCategoriaFn = async (id) => {
-    try {
-      const res = await deleteCategoria(id);
-      alert("Categoría eliminada correctamente");
-      return res.data; // corregido: el backend no devuelve `data`
-    } catch (err) {
-      console.error("Error al eliminar la categoría:", err);
-      alert("Error al eliminar la categoría");
-      throw err;
-    }
+  // Eliminar categoría
+  const deleteCategoria = async (id) => {
+    const res = await apiDeleteCategoria(id);
+    queryClient.invalidateQueries(["categorias"]);
+    return res.data?.data ?? res.data;
   };
 
+  // Buscar categorías por nombre
   const searchCategoriasByNameFn = async (term) => {
     if (!term) return [];
     const res = await searchCategoriasByName(term);
@@ -63,9 +52,9 @@ function useCategoria() {
     error,
     isLoading,
     refetchCategorias: refetch,
-    createCategoria: createCategoriaFn,
-    updateCategoria: updateCategoriaFn,
-    deleteCategoria: deleteCategoriaFn,
+    createCategoria,
+    updateCategoria,
+    deleteCategoria,
     searchCategoriasByName: searchCategoriasByNameFn,
   };
 }
