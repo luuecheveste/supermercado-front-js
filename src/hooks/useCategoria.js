@@ -12,40 +12,62 @@ function useCategoria() {
 
   const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ["categorias"],
-    queryFn: getCategorias, // ya devuelve los datos directamente
+    queryFn: getCategorias,
   });
 
-  const createCategoriaFn = useMutation(createCategoria, {
+  const categorias = data || [];
+
+  const createCategoriaFn = useMutation({
+    mutationFn: createCategoria,
     onSuccess: () => {
       queryClient.invalidateQueries(["categorias"]);
+      alert("Categoría creada exitosamente");
+    },
+    onError: (err) => {
+      console.error(err);
+      alert("Error al crear la categoría");
     },
   });
 
-  const updateCategoriaFn = useMutation(
-    ({ id, data }) => updateCategoria(id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["categorias"]);
-      },
-    }
-  );
-
-  const deleteCategoriaFn = useMutation(deleteCategoria, {
+  const updateCategoriaFn = useMutation({
+    mutationFn: ({ id, data }) => updateCategoria(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(["categorias"]);
+      alert("Categoría actualizada exitosamente");
+    },
+    onError: (err) => {
+      console.error(err);
+      alert("Error al actualizar la categoría");
     },
   });
+
+  const deleteCategoriaFn = useMutation({
+    mutationFn: deleteCategoria,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categorias"]);
+      alert("Categoría eliminada exitosamente");
+    },
+    onError: (err) => {
+      console.error(err);
+      alert("Error al eliminar la categoría");
+    },
+  });
+
+  const searchCategoriasByNameFn = async (param) => {
+    if (!param) return categorias;
+    return await searchCategoriasByName(param);
+  };
 
   return {
-    categorias: data || [],
+    categorias,
+    isLoading,
     isError,
     error,
-    isLoading,
     refetchCategorias: refetch,
     createCategoria: createCategoriaFn.mutateAsync,
     updateCategoria: updateCategoriaFn.mutateAsync,
     deleteCategoria: deleteCategoriaFn.mutateAsync,
-    searchCategoriasByName,
+    searchCategoriasByName: searchCategoriasByNameFn,
   };
 }
 
