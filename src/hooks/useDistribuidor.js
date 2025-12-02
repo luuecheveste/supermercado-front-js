@@ -1,70 +1,50 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getDistribuidoresByZona,
-  createDistribuidor,
-  updateDistribuidor,
-  deleteDistribuidor
+  createDistribuidor as apiCreateDistribuidor,
+  updateDistribuidor as apiUpdateDistribuidor,
+  deleteDistribuidor as apiDeleteDistribuidor,
 } from "../services/api";
 
-/**
- * Hook para manejar distribuidores asociados a una zona específica.
- * @param {number|string} zonaId - ID de la zona a la que pertenecen los distribuidores.
- */
-function useDistribuidores(zonaId) {
-  if (!zonaId) throw new Error("useDistribuidores requiere un zonaId válido");
+// zonaId es obligatorio para las funciones de query, pero lo hacemos opcional internamente
+function useDistribuidor(zonaId) {
+  const queryClient = useQueryClient();
 
-  // ------- Distribuidores -------
-  const {
-    data: distribuidoresData,
-    isError,
-    error,
-    isLoading,
-    refetch: refetchDistribuidores
-  } = useQuery({
+  // Solo ejecutamos la query si hay zonaId
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["distribuidores", zonaId],
-    queryFn: () => getDistribuidoresByZona(Number(zonaId)),
+    queryFn: () => getDistribuidoresByZona(zonaId),
+    enabled: !!zonaId,
   });
 
-  const distribuidores = Array.isArray(distribuidoresData?.data)
-    ? distribuidoresData.data
-    : [];
+  const distribuidores = data?.data ?? [];
 
-  // ------- Mutaciones -------
-  const createDistribuidorFn = async (distribuidor) => {
-    if (!zonaId) throw new Error("No se puede crear distribuidor sin zonaId");
-    return createDistribuidor({ ...distribuidor, zona: Number(zonaId) });
-  };
+  // Mutaciones
+  const createDistribuidor = useMutation({
+    mutationFn: (distribuidor) => apiCreateDistribuidor(distribuidor),
+    onSuccess: () => queryClient.invalidateQueries(["distribuidores", zonaId]),
+  });
 
-  const updateDistribuidorFn = async (id, distribuidor) => {
-    if (!id) throw new Error("ID de distribuidor inválido");
-    return updateDistribuidor(Number(id), { ...distribuidor, zona: Number(zonaId) });
-  };
+  const updateDistribuidor = useMutation({
+    mutationFn: ({ id, data }) => apiUpdateDistribuidor(id, data),
+    onSuccess: () => queryClient.invalidateQueries(["distribuidores", zonaId]),
+  });
 
-  const deleteDistribuidorFn = async (id) => {
-    if (!id) throw new Error("ID de distribuidor inválido");
-    return deleteDistribuidor(Number(id));
-  };
-
-  // ------- Búsqueda segura (opcional) -------
-  const safeSearchDistribuidores = async (term) => {
-    if (!term?.trim()) return [];
-    const data = await getDistribuidoresByZona(zonaId);
-    return Array.isArray(data?.data)
-      ? data.data.filter(d => d.name.toLowerCase().includes(term.toLowerCase()))
-      : [];
-  };
+  const deleteDistribuidor = useMutation({
+    mutationFn: (id) => apiDeleteDistribuidor(id),
+    onSuccess: () => queryClient.invalidateQueries(["distribuidores", zonaId]),
+  });
 
   return {
     distribuidores,
+    isLoading,
     isError,
     error,
-    isLoading,
-    refetchDistribuidores,
-    createDistribuidor: createDistribuidorFn,
-    updateDistribuidor: updateDistribuidorFn,
-    deleteDistribuidor: deleteDistribuidorFn,
-    searchDistribuidores: safeSearchDistribuidores,
+    refetch,
+    createDistribuidor: createDistribuidor.mutateAsync,
+    updateDistribuidor: updateDistribuidor.mutateAsync,
+    deleteDistribuidor: deleteDistribuidor.mutateAsync,
   };
 }
 
-export default useDistribuidores;
+export default useDistribuidor;
