@@ -32,6 +32,7 @@ const ZonasDistribuidores = () => {
     reset: resetEdit,
   } = useForm();
 
+  // Mantener la lista de zonas actualizada
   useEffect(() => {
     setDisplayedZonas(zonas || []);
   }, [zonas]);
@@ -61,12 +62,13 @@ const ZonasDistribuidores = () => {
         zona: zonaCreada.data.id,
       });
 
-      alert("Zona y distribuidor creados exitosamente");
+      alert("Zona y distribuidor creados exitosamente ✅");
       reset();
-      refetchZonas();
+      const nuevasZonas = await refetchZonas();
+      setDisplayedZonas(nuevasZonas || []);
     } catch (err) {
       console.error(err);
-      alert("Error al crear zona o distribuidor");
+      alert("Error al crear zona o distribuidor ❌");
     }
   };
 
@@ -110,45 +112,40 @@ const ZonasDistribuidores = () => {
         });
       }
 
-      alert("Zona y distribuidor actualizados exitosamente");
-      refetchZonas();
+      alert("Zona y distribuidor actualizados exitosamente ✅");
+      const nuevasZonas = await refetchZonas();
+      setDisplayedZonas(nuevasZonas || []);
       setEditModalOpen(false);
     } catch (err) {
       console.error(err);
-      alert("Error al actualizar zona o distribuidor");
+      alert("Error al actualizar zona o distribuidor ❌");
     }
   };
 
   const handleDelete = async (zonaId) => {
     if (!window.confirm("¿Eliminar zona y distribuidor asociado?")) return;
-  
+
     try {
-      // Obtenemos la zona seleccionada y su distribuidor
       const zona = zonas.find((z) => z.id === zonaId);
       const distribuidorId = zona?.distribuidores?.[0]?.id;
-  
-      // Eliminamos ambos en paralelo (si hay distribuidor)
+
+      // Eliminamos ambos en paralelo
       await Promise.all([
         distribuidorId ? deleteDistribuidor(distribuidorId) : Promise.resolve(),
-        deleteZona(zonaId)
+        deleteZona(zonaId),
       ]);
-  
-      // Refrescamos la lista inmediatamente
+
       const nuevasZonas = await refetchZonas();
       setDisplayedZonas(nuevasZonas || []);
-  
-      // Mensaje de éxito
-      alert("Zona y distribuidor eliminados correctamente!");
+      alert("Zona y distribuidor eliminados correctamente!✅"); 
     } catch (err) {
-      console.error(err);
-      alert("Error al eliminar zona o distribuidor");
+      console.error(err); 
+      alert("Error al eliminar zona o distribuidor ❌");
     }
-  };
-  
-  
-if (loadingZonas)
-  return <p className="loading-message">Cargando zonas...</p>;
-  
+  }; 
+
+  if (loadingZonas)
+    return <p className="loading-message">Cargando zonas...</p>;
 
   return (
     <div className="zonas-distribuidores-container">
@@ -169,9 +166,7 @@ if (loadingZonas)
       <div className="zonas-list">
         {displayedZonas.length === 0 && (
           <p className="empty-state">
-            {searchTerm
-              ? "No se encontraron zonas"
-              : "No hay zonas creadas"}
+            {searchTerm ? "No se encontraron zonas" : "No hay zonas creadas"}
           </p>
         )}
         {displayedZonas.map((zona) => {
@@ -180,7 +175,7 @@ if (loadingZonas)
             <div key={zona.id} className="zona-card compact">
               <div className="zona-actions-floating">
                 <button
-                  onClick={() => handleDelete(zona.id, distribuidor?.id)}
+                  onClick={() => handleDelete(zona.id)}
                   title="Eliminar zona y distribuidor"
                 >
                   ✖
