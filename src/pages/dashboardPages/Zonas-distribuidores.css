@@ -93,11 +93,13 @@
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
+/* Botones en tarjeta */
 .zona-actions button {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 1.1rem;
+  color: #34495e; /* color base visible */
   transition: transform 0.2s, color 0.2s;
 }
 .zona-actions button:first-child:hover {
