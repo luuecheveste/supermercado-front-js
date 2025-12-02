@@ -7,21 +7,26 @@ function NuevaCategoria() {
   const {
     categorias,
     isLoading,
+    searchCategoriasByName,
     createCategoria,
     refetchCategorias,
     updateCategoria,
     deleteCategoria,
-    searchCategoriasByName
   } = useCategoria();
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
-  const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, formState: { errors: errorsEdit, isSubmitting: isSubmittingEdit } } = useForm();
+  const {
+    register: registerEdit,
+    handleSubmit: handleSubmitEdit,
+    reset: resetEdit,
+    formState: { errors: errorsEdit, isSubmitting: isSubmittingEdit },
+  } = useForm();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [isProcessingDelete, setIsProcessingDelete] = useState(false);
   const [isProcessingUpdate, setIsProcessingUpdate] = useState(false);
-
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [displayedCategorias, setDisplayedCategorias] = useState([]);
 
@@ -53,27 +58,26 @@ function NuevaCategoria() {
 
   const onSubmit = async (data) => {
     try {
-      await createCategoria({
-        name: data.name,
-        description: data.description
-      });
-
+      await createCategoria({ name: data.name, description: data.description });
+      alert("Categoría creada exitosamente");
       handleRefetch();
       reset();
     } catch (error) {
       console.error("Error al crear la categoría:", error);
+      alert("Error al crear la categoría");
     }
   };
 
   const handleDelete = async (id) => {
-    const ok = window.confirm("¿Eliminar esta categoría?");
-    if (!ok) return;
+    if (!window.confirm("¿Eliminar esta categoría?")) return;
     try {
       setIsProcessingDelete(true);
       await deleteCategoria(id);
+      alert("Categoría eliminada exitosamente");
       handleRefetch();
-    } catch (err) {
-      console.error("Error al eliminar categoría:", err);
+    } catch (error) {
+      console.error("Error al eliminar categoría:", error);
+      alert("Error al eliminar la categoría");
     } finally {
       setIsProcessingDelete(false);
     }
@@ -96,10 +100,12 @@ function NuevaCategoria() {
     try {
       setIsProcessingUpdate(true);
       await updateCategoria(editingCategory.id, { name: data.name, description: data.description });
+      alert("Categoría actualizada exitosamente");
       handleRefetch();
       closeEditModal();
-    } catch (err) {
-      console.error("Error al actualizar categoría:", err);
+    } catch (error) {
+      console.error("Error al actualizar categoría:", error);
+      alert("Error al actualizar la categoría");
     } finally {
       setIsProcessingUpdate(false);
     }
@@ -122,6 +128,7 @@ function NuevaCategoria() {
         />
       </div>
 
+      {/* Lista de categorías */}
       <div className="categorias-list">
         {displayedCategorias?.map((cat) => (
           <div key={cat.id} className="categoria-card">
@@ -163,24 +170,25 @@ function NuevaCategoria() {
                   placeholder="Nombre"
                   {...registerEdit("name", {
                     required: "El nombre es obligatorio",
-                    minLength: { value: 2, message: "El nombre debe tener al menos 2 caracteres" },
-                    pattern: { value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/, message: "Solo se permiten letras y espacios" }
+                    minLength: { value: 2, message: "Debe tener al menos 2 caracteres" },
+                    pattern: {
+                      value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
+                      message: "Solo se permiten letras y espacios"
+                    }
                   })}
                 />
                 {errorsEdit?.name && <p className="error-message">{errorsEdit.name.message}</p>}
               </div>
-
               <div className="form-group">
                 <input
                   type="text"
                   placeholder="Descripción"
                   {...registerEdit("description", {
-                    minLength: { value: 5, message: "La descripción debe tener al menos 5 caracteres" }
+                    minLength: { value: 5, message: "Debe tener al menos 5 caracteres" }
                   })}
                 />
                 {errorsEdit?.description && <p className="error-message">{errorsEdit.description.message}</p>}
               </div>
-
               <div className="modal-actions">
                 <button type="button" onClick={closeEditModal}>Cancelar</button>
                 <button type="submit" disabled={isProcessingUpdate || isSubmittingEdit}>
@@ -202,24 +210,22 @@ function NuevaCategoria() {
               placeholder="Nombre"
               {...register("name", {
                 required: "El nombre es obligatorio",
-                minLength: { value: 2, message: "El nombre debe tener al menos 2 caracteres" },
+                minLength: { value: 2, message: "Debe tener al menos 2 caracteres" },
                 pattern: { value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/, message: "Solo se permiten letras y espacios" }
               })}
             />
             {errors.name && <p className="error-message">{errors.name.message}</p>}
           </div>
-
           <div className="form-group">
             <input
               type="text"
               placeholder="Descripción"
               {...register("description", {
-                minLength: { value: 5, message: "La descripción debe tener al menos 5 caracteres" }
+                minLength: { value: 5, message: "Debe tener al menos 5 caracteres" }
               })}
             />
             {errors.description && <p className="error-message">{errors.description.message}</p>}
           </div>
-
           <button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Creando..." : "Crear"}
           </button>
