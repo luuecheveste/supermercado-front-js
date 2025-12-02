@@ -1,11 +1,11 @@
 /* Contenedor principal */
 .zonas-distribuidores-container {
-  max-width: 900px;
+  max-width: 850px;
   margin: 2rem auto;
-  padding: 1rem;
+  padding: 1.5rem;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   font-family: 'Inter', sans-serif;
 }
 
@@ -24,12 +24,12 @@
 }
 .search-input {
   width: 100%;
-  padding: 0.7rem 1rem;
+  padding: 0.65rem 0.9rem;
   border: 1px solid #dce1e6;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #2c3e50;
-  background-color: #fdfdfd;
+  background-color: #f9f9f9;
   transition: border 0.2s, background 0.2s;
 }
 .search-input:focus {
@@ -46,49 +46,33 @@
   gap: 0.8rem;
 }
 .zona-card {
-  background: #f9fafc;
+  background: #f5f7fa;
   border-radius: 10px;
-  padding: 0.8rem 1rem;
+  padding: 0.9rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-  transition: transform 0.2s, box-shadow 0.2s;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
 }
 .zona-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
 }
-.zona-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.zona-header h3 {
+.zona-title {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.3rem;
+  font-weight: 600;
   color: #2c3e50;
+  text-align: center;
 }
-.zona-actions button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-left: 0.3rem;
-  transition: transform 0.2s, color 0.2s;
-}
-.zona-actions button:hover {
-  transform: scale(1.2);
-}
-.zona-actions button:first-child:hover { color: #e74c3c; }
-.zona-actions button:last-child:hover { color: #667eea; }
 .zona-description {
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   color: #34495e;
-  margin-left: 0.2rem;
+  text-align: center;
 }
 
-/* Distribuidores */
+/* Distribuidor */
 .distribuidor-card {
   background: #ffffff;
   border-left: 4px solid #667eea;
@@ -96,22 +80,44 @@
   border-radius: 6px;
   font-size: 0.9rem;
   color: #2c3e50;
-  margin-left: 0.5rem;
+  width: 100%;
 }
 .distribuidor-card.empty {
   font-style: italic;
   color: #6c757d;
 }
 
+/* Botones en tarjeta */
+.zona-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.zona-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: transform 0.2s, color 0.2s;
+}
+.zona-actions button:first-child:hover {
+  color: #e74c3c; /* eliminar */
+  transform: scale(1.2);
+}
+.zona-actions button:last-child:hover {
+  color: #667eea; /* editar */
+  transform: scale(1.2);
+}
+
 /* Formularios */
 .form-section {
-  background: #f4f6fa;
+  background: #f9f9f9;
   padding: 0.8rem;
   border-radius: 8px;
   margin-bottom: 0.8rem;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 .form-section h4 {
   margin: 0 0 0.3rem 0;
@@ -120,10 +126,10 @@
   color: #2c3e50;
 }
 input {
-  padding: 0.55rem 0.75rem;
+  padding: 0.5rem 0.7rem;
   border: 1px solid #dce1e6;
   border-radius: 6px;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: #2c3e50;
   background-color: #ffffff;
 }
@@ -141,7 +147,7 @@ button {
   border-radius: 8px;
   border: none;
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   transition: all 0.2s;
 }
 button.btn-submit {
@@ -165,7 +171,7 @@ button:disabled {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 0.8rem;
+  padding: 1rem;
 }
 .modal {
   background: #ffffff;
@@ -175,11 +181,11 @@ button:disabled {
   max-width: 450px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 .modal h3 {
   margin-top: 0;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
   text-align: center;
   color: #2c3e50;
 }
@@ -188,20 +194,12 @@ button:disabled {
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-top: 0.8rem;
 }
 .modal-actions button {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   padding: 0.45rem 0.9rem;
-}
-.modal-actions button[type="submit"] {
-  background-color: #667eea;
-  color: #ffffff;
-}
-.modal-actions button[type="button"] {
-  background-color: #6c757d;
-  color: #ffffff;
 }
 
 /* Mensajes y estados */
@@ -209,13 +207,13 @@ button:disabled {
 .empty-state {
   text-align: center;
   color: #6c757d;
-  padding: 1rem;
+  padding: 0.8rem;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .zona-card {
-    padding: 0.6rem 0.8rem;
+    padding: 0.7rem;
   }
   .form-section {
     padding: 0.6rem;
@@ -223,7 +221,7 @@ button:disabled {
 }
 @media (max-width: 480px) {
   .modal {
-    padding: 0.8rem;
+    padding: 1rem;
   }
   .modal-actions {
     flex-direction: column;

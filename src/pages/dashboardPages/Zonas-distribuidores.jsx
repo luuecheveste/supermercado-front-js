@@ -32,12 +32,10 @@ const ZonasDistribuidores = () => {
     reset: resetEdit,
   } = useForm();
 
-  // Refrescar listado al cambiar zonas o búsqueda
   useEffect(() => {
     setDisplayedZonas(zonas || []);
   }, [zonas]);
 
-  // Buscar zonas por nombre
   const handleSearch = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
@@ -45,12 +43,10 @@ const ZonasDistribuidores = () => {
       setDisplayedZonas(zonas);
       return;
     }
-
     const results = await searchZonasByName(term);
     setDisplayedZonas(results || []);
   };
 
-  // Crear zona + distribuidor
   const onSubmit = async (data) => {
     try {
       const zonaCreada = await createZona({
@@ -77,7 +73,6 @@ const ZonasDistribuidores = () => {
     }
   };
 
-  // Abrir modal de edición
   const openEditModal = (zona) => {
     setEditingZona(zona);
     const distribuidor = zona.distribuidores?.[0] || null;
@@ -96,7 +91,6 @@ const ZonasDistribuidores = () => {
     setEditModalOpen(true);
   };
 
-  // Editar zona + distribuidor
   const onEditSubmit = async (data) => {
     if (!editingZona) return;
 
@@ -128,7 +122,6 @@ const ZonasDistribuidores = () => {
     }
   };
 
-  // Eliminar zona + distribuidor
   const handleDelete = async (zonaId, distribuidorId) => {
     if (!window.confirm("¿Eliminar zona y distribuidor asociado?")) return;
 
@@ -176,31 +169,20 @@ const ZonasDistribuidores = () => {
           const distribuidor = zona.distribuidores?.[0] || null;
           return (
             <div key={zona.id} className="zona-card compact">
-              <div className="zona-header">
-                <h3 className="zona-title">{zona.name}</h3>
-                <div className="zona-actions">
-                  <button onClick={() => handleDelete(zona.id, distribuidor?.id)}>
-                    ✖
-                  </button>
-                  <button onClick={() => openEditModal(zona)}>✎</button>
-                </div>
-              </div>
+              <h3 className="zona-title">{zona.name}</h3>
               <p className="zona-description">{zona.description}</p>
 
-              {distribuidor ? (
+              {distribuidor && (
                 <div className="distribuidor-card compact">
-                  <p>
-                    <strong>Distribuidor:</strong> {distribuidor.name} {distribuidor.apellido}
-                  </p>
-                  <p>
-                    <strong>DNI:</strong> {distribuidor.dni} | <strong>Valor entrega:</strong> ${distribuidor.valorEntrega}
-                  </p>
-                </div>
-              ) : (
-                <div className="distribuidor-card empty compact">
-                  <em>No hay distribuidor asociado</em>
+                  <p><strong>Distribuidor:</strong> {distribuidor.name} {distribuidor.apellido}</p>
+                  <p><strong>DNI:</strong> {distribuidor.dni} | <strong>Valor entrega:</strong> ${distribuidor.valorEntrega}</p>
                 </div>
               )}
+
+              <div className="zona-actions">
+                <button onClick={() => handleDelete(zona.id, distribuidor?.id)}>✖</button>
+                <button onClick={() => openEditModal(zona)}>✎</button>
+              </div>
             </div>
           );
         })}
@@ -212,12 +194,12 @@ const ZonasDistribuidores = () => {
           <div className="modal compact">
             <h3>Editar Zona y Distribuidor</h3>
             <form onSubmit={handleSubmitEdit(onEditSubmit)} className="form-modal">
-              <div className="form-section compact">
+              <div className="form-section">
                 <h4>Zona</h4>
                 <input {...registerEdit("zonaName")} placeholder="Nombre de la zona" />
                 <input {...registerEdit("zonaDescription")} placeholder="Descripción" />
               </div>
-              <div className="form-section compact">
+              <div className="form-section">
                 <h4>Distribuidor</h4>
                 <input {...registerEdit("distribuidorName")} placeholder="Nombre" />
                 <input {...registerEdit("distribuidorApellido")} placeholder="Apellido" />
@@ -225,9 +207,7 @@ const ZonasDistribuidores = () => {
                 <input {...registerEdit("distribuidorValorEntrega")} placeholder="Valor de entrega" type="number" step="0.01" />
               </div>
               <div className="modal-actions">
-                <button type="button" onClick={() => setEditModalOpen(false)}>
-                  Cancelar
-                </button>
+                <button type="button" onClick={() => setEditModalOpen(false)}>Cancelar</button>
                 <button type="submit">Guardar</button>
               </div>
             </form>
@@ -239,17 +219,19 @@ const ZonasDistribuidores = () => {
       <div className="nueva-zona">
         <h2>Crear Nueva Zona con Distribuidor</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="form-create">
-          <div className="form-section compact">
+          <div className="form-section">
+            <h4>Zona</h4>
             <input {...register("zonaName")} placeholder="Nombre de la zona" />
             <input {...register("zonaDescription")} placeholder="Descripción" />
+          </div>
+          <div className="form-section">
+            <h4>Distribuidor</h4>
             <input {...register("distribuidorName")} placeholder="Nombre" />
             <input {...register("distribuidorApellido")} placeholder="Apellido" />
             <input {...register("distribuidorDni")} placeholder="DNI" />
             <input {...register("distribuidorValorEntrega")} placeholder="Valor de entrega" type="number" step="0.01" />
           </div>
-          <button type="submit" className="btn-submit">
-            Crear
-          </button>
+          <button type="submit" className="btn-submit">Crear</button>
         </form>
       </div>
     </div>
