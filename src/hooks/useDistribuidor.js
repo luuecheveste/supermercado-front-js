@@ -6,45 +6,64 @@ import {
   deleteDistribuidor
 } from "../services/api";
 
+/**
+ * Hook para manejar distribuidores asociados a una zona específica.
+ * @param {number|string} zonaId - ID de la zona a la que pertenecen los distribuidores.
+ */
 function useDistribuidores(zonaId) {
-  if (!zonaId) throw new Error("useDistribuidores requiere un zonaId");
+  if (!zonaId) throw new Error("useDistribuidores requiere un zonaId válido");
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  // ------- Distribuidores -------
+  const {
+    data: distribuidoresData,
+    isError,
+    error,
+    isLoading,
+    refetch: refetchDistribuidores
+  } = useQuery({
     queryKey: ["distribuidores", zonaId],
-    queryFn: () => getDistribuidoresByZona(zonaId),
-    enabled: Boolean(zonaId)
+    queryFn: () => getDistribuidoresByZona(Number(zonaId)),
   });
 
-  const distribuidores = Array.isArray(data)
-    ? data
-    : Array.isArray(data?.data)
-      ? data.data
-      : [];
+  const distribuidores = Array.isArray(distribuidoresData?.data)
+    ? distribuidoresData.data
+    : [];
 
+  // ------- Mutaciones -------
   const createDistribuidorFn = async (distribuidor) => {
-    if (!distribuidor.zona) distribuidor.zona = zonaId;
-    return createDistribuidor(distribuidor);
+    if (!zonaId) throw new Error("No se puede crear distribuidor sin zonaId");
+    return createDistribuidor({ ...distribuidor, zona: Number(zonaId) });
   };
 
   const updateDistribuidorFn = async (id, distribuidor) => {
     if (!id) throw new Error("ID de distribuidor inválido");
-    return updateDistribuidor(id, distribuidor);
+    return updateDistribuidor(Number(id), { ...distribuidor, zona: Number(zonaId) });
   };
 
   const deleteDistribuidorFn = async (id) => {
     if (!id) throw new Error("ID de distribuidor inválido");
-    return deleteDistribuidor(id);
+    return deleteDistribuidor(Number(id));
+  };
+
+  // ------- Búsqueda segura (opcional) -------
+  const safeSearchDistribuidores = async (term) => {
+    if (!term?.trim()) return [];
+    const data = await getDistribuidoresByZona(zonaId);
+    return Array.isArray(data?.data)
+      ? data.data.filter(d => d.name.toLowerCase().includes(term.toLowerCase()))
+      : [];
   };
 
   return {
     distribuidores,
-    isLoading,
     isError,
     error,
-    refetch,
+    isLoading,
+    refetchDistribuidores,
     createDistribuidor: createDistribuidorFn,
     updateDistribuidor: updateDistribuidorFn,
-    deleteDistribuidor: deleteDistribuidorFn
+    deleteDistribuidor: deleteDistribuidorFn,
+    searchDistribuidores: safeSearchDistribuidores,
   };
 }
 
