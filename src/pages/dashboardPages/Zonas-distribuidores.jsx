@@ -39,17 +39,12 @@ const ZonasDistribuidores = () => {
   const handleSearch = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-
-    if (!term.trim()) {
-      setDisplayedZonas(zonas);
-      return;
-    }
+    if (!term.trim()) return setDisplayedZonas(zonas);
 
     const results = await searchZonasByName(term);
     setDisplayedZonas(results || []);
   };
 
-  // --- Crear zona con distribuidor ---
   const onSubmit = async (data) => {
     try {
       const zonaCreada = await createZona({
@@ -66,17 +61,15 @@ const ZonasDistribuidores = () => {
         zona: zonaCreada.data.id,
       });
 
+      alert("Zona y distribuidor creados exitosamente");
       reset();
       refetchZonas();
-      setDisplayedZonas(await searchTerm ? await searchZonasByName(searchTerm) : zonas);
-      alert("Zona y distribuidor creados correctamente");
     } catch (err) {
       console.error(err);
       alert("Error al crear zona o distribuidor");
     }
   };
 
-  // --- Editar zona y distribuidor ---
   const openEditModal = (zona) => {
     setEditingZona(zona);
     const distribuidor = zona.distribuidores?.[0] || null;
@@ -117,33 +110,31 @@ const ZonasDistribuidores = () => {
         });
       }
 
+      alert("Zona y distribuidor actualizados exitosamente");
       refetchZonas();
-      setDisplayedZonas(searchTerm ? await searchZonasByName(searchTerm) : zonas);
       setEditModalOpen(false);
-      alert("Zona y distribuidor actualizados correctamente");
     } catch (err) {
       console.error(err);
       alert("Error al actualizar zona o distribuidor");
     }
   };
 
-  // --- Eliminar zona y distribuidor ---
   const handleDelete = async (zonaId, distribuidorId) => {
     if (!window.confirm("¿Eliminar zona y distribuidor asociado?")) return;
 
     try {
       if (distribuidorId) await deleteDistribuidor(distribuidorId);
       await deleteZona(zonaId);
-
-      setDisplayedZonas(prev => prev.filter(z => z.id !== zonaId));
-      alert("Zona y distribuidor eliminados correctamente");
+      alert("Zona y distribuidor eliminados exitosamente");
+      refetchZonas();
     } catch (err) {
       console.error(err);
       alert("Error al eliminar zona o distribuidor");
     }
   };
 
-  if (loadingZonas) return <p className="loading-message">Cargando zonas...</p>;
+  if (loadingZonas)
+    return <p className="loading-message">Cargando zonas...</p>;
 
   return (
     <div className="zonas-distribuidores-container">
@@ -164,48 +155,51 @@ const ZonasDistribuidores = () => {
       <div className="zonas-list">
         {displayedZonas.length === 0 && (
           <p className="empty-state">
-            {searchTerm ? "No se encontraron zonas" : "No hay zonas creadas"}
+            {searchTerm
+              ? "No se encontraron zonas"
+              : "No hay zonas creadas"}
           </p>
         )}
         {displayedZonas.map((zona) => {
           const distribuidor = zona.distribuidores?.[0] || null;
           return (
             <div key={zona.id} className="zona-card compact">
-              <div className="zona-header">
-                <h3>{zona.name}</h3>
-                <div className="zona-actions">
-                  <button
-                    onClick={() => handleDelete(zona.id, distribuidor?.id)}
-                    title="Eliminar zona y distribuidor"
-                  >
-                    ✖
-                  </button>
-                  <button
-                    onClick={() => openEditModal(zona)}
-                    title="Editar zona y distribuidor"
-                  >
-                    ✎
-                  </button>
-                </div>
+              <div className="zona-actions-floating">
+                <button
+                  onClick={() => handleDelete(zona.id, distribuidor?.id)}
+                  title="Eliminar zona y distribuidor"
+                >
+                  ✖
+                </button>
+                <button
+                  onClick={() => openEditModal(zona)}
+                  title="Editar zona y distribuidor"
+                >
+                  ✎
+                </button>
               </div>
-              <p className="zona-description">{zona.description}</p>
 
-              {distribuidor ? (
-                <div className="distribuidor-card compact">
-                  <p>
-                    <strong>Distribuidor:</strong> {distribuidor.name}{" "}
-                    {distribuidor.apellido}
-                  </p>
-                  <p>
-                    <strong>DNI:</strong> {distribuidor.dni} |{" "}
-                    <strong>Valor entrega:</strong> ${distribuidor.valorEntrega}
-                  </p>
-                </div>
-              ) : (
-                <div className="distribuidor-card empty compact">
-                  <em>No hay distribuidor asociado</em>
-                </div>
-              )}
+              <div className="zona-content">
+                <h3>{zona.name}</h3>
+                <p className="zona-description">{zona.description}</p>
+
+                {distribuidor ? (
+                  <div className="distribuidor-card compact">
+                    <p>
+                      <strong>Distribuidor:</strong> {distribuidor.name}{" "}
+                      {distribuidor.apellido}
+                    </p>
+                    <p>
+                      <strong>DNI:</strong> {distribuidor.dni} |{" "}
+                      <strong>Valor entrega:</strong> ${distribuidor.valorEntrega}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="distribuidor-card empty compact">
+                    <em>No hay distribuidor asociado</em>
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}
