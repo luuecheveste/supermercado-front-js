@@ -10,40 +10,35 @@ import {
 function useCategoria() {
   const queryClient = useQueryClient();
 
-  // Trae todas las categorías
   const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ["categorias"],
     queryFn: getCategorias,
   });
 
-  const categorias = data?.data ?? []; // <-- el array real de categorías
+  const categorias = Array.isArray(data) ? data : []; // ya es un array desde el api.js
 
-  // Crear categoría
   const createCategoria = async (categoriaData) => {
     const res = await apiCreateCategoria(categoriaData);
     queryClient.invalidateQueries(["categorias"]);
-    return res.data?.data ?? res.data; // evita usar data.data.data
+    return res; // ya devuelve el objeto creado
   };
 
-  // Actualizar categoría
   const updateCategoria = async (id, categoriaData) => {
     const res = await apiUpdateCategoria(id, categoriaData);
     queryClient.invalidateQueries(["categorias"]);
-    return res.data?.data ?? res.data;
+    return res;
   };
 
-  // Eliminar categoría
   const deleteCategoria = async (id) => {
     const res = await apiDeleteCategoria(id);
     queryClient.invalidateQueries(["categorias"]);
-    return res.data?.data ?? res.data;
+    return res;
   };
 
-  // Buscar categorías por nombre
   const searchCategoriasByNameFn = async (term) => {
     if (!term) return [];
     const res = await searchCategoriasByName(term);
-    return res.data?.data ?? [];
+    return Array.isArray(res) ? res : [];
   };
 
   return {

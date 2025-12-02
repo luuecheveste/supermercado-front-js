@@ -21,6 +21,7 @@ function NuevaCategoria() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [isProcessingDelete, setIsProcessingDelete] = useState(false);
   const [isProcessingUpdate, setIsProcessingUpdate] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [displayedCategorias, setDisplayedCategorias] = useState([]);
 
@@ -37,7 +38,7 @@ function NuevaCategoria() {
     const term = e.target.value;
     setSearchTerm(term);
 
-    if (!term.trim()) {
+    if (term.trim() === "") {
       setDisplayedCategorias(categorias || []);
     } else {
       try {
@@ -52,17 +53,21 @@ function NuevaCategoria() {
 
   const onSubmit = async (data) => {
     try {
-      await createCategoria({ name: data.name, description: data.description });
+      await createCategoria({
+        name: data.name,
+        description: data.description
+      });
+
       handleRefetch();
       reset();
     } catch (error) {
-      console.error("Error al crear categoría:", error);
+      console.error("Error al crear la categoría:", error);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Eliminar esta categoría?")) return;
-
+    const ok = window.confirm("¿Eliminar esta categoría?");
+    if (!ok) return;
     try {
       setIsProcessingDelete(true);
       await deleteCategoria(id);
@@ -88,7 +93,6 @@ function NuevaCategoria() {
 
   const onEditSubmit = async (data) => {
     if (!editingCategory) return;
-
     try {
       setIsProcessingUpdate(true);
       await updateCategoria(editingCategory.id, { name: data.name, description: data.description });
@@ -107,6 +111,7 @@ function NuevaCategoria() {
     <div className="categorias-container">
       <h2 className="categorias-title">Categorías</h2>
 
+      {/* Campo de búsqueda */}
       <div className="search-container">
         <input
           type="text"
@@ -141,9 +146,12 @@ function NuevaCategoria() {
             <div className="categoria-descripcion">{cat.description}</div>
           </div>
         ))}
-        {searchTerm && displayedCategorias.length === 0 && <p>No se encontraron categorías</p>}
+        {searchTerm && displayedCategorias.length === 0 && (
+          <p>No se encontraron categorías</p>
+        )}
       </div>
 
+      {/* Modal de edición */}
       {editModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -161,6 +169,7 @@ function NuevaCategoria() {
                 />
                 {errorsEdit?.name && <p className="error-message">{errorsEdit.name.message}</p>}
               </div>
+
               <div className="form-group">
                 <input
                   type="text"
@@ -171,6 +180,7 @@ function NuevaCategoria() {
                 />
                 {errorsEdit?.description && <p className="error-message">{errorsEdit.description.message}</p>}
               </div>
+
               <div className="modal-actions">
                 <button type="button" onClick={closeEditModal}>Cancelar</button>
                 <button type="submit" disabled={isProcessingUpdate || isSubmittingEdit}>
@@ -182,6 +192,7 @@ function NuevaCategoria() {
         </div>
       )}
 
+      {/* Crear nueva categoría */}
       <div className="nueva-categoria">
         <h3 className="nueva-categoria-title">Nueva Categoría</h3>
         <form className="form-categoria" onSubmit={handleSubmit(onSubmit)} noValidate>
