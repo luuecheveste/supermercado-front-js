@@ -32,19 +32,25 @@ const ZonasDistribuidores = () => {
     reset: resetEdit,
   } = useForm();
 
+  // Refrescar listado al cambiar zonas o búsqueda
   useEffect(() => {
     setDisplayedZonas(zonas || []);
   }, [zonas]);
 
+  // Buscar zonas por nombre
   const handleSearch = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    if (!term.trim()) return setDisplayedZonas(zonas);
+    if (!term.trim()) {
+      setDisplayedZonas(zonas);
+      return;
+    }
 
     const results = await searchZonasByName(term);
     setDisplayedZonas(results || []);
   };
 
+  // Crear zona + distribuidor
   const onSubmit = async (data) => {
     try {
       const zonaCreada = await createZona({
@@ -63,13 +69,15 @@ const ZonasDistribuidores = () => {
 
       reset();
       refetchZonas();
-      alert("Zona y distribuidor creados exitosamente!");
+      setSearchTerm("");
+      alert("Zona y distribuidor creados correctamente!");
     } catch (err) {
       console.error(err);
       alert("Error al crear zona o distribuidor");
     }
   };
 
+  // Abrir modal de edición
   const openEditModal = (zona) => {
     setEditingZona(zona);
     const distribuidor = zona.distribuidores?.[0] || null;
@@ -88,6 +96,7 @@ const ZonasDistribuidores = () => {
     setEditModalOpen(true);
   };
 
+  // Editar zona + distribuidor
   const onEditSubmit = async (data) => {
     if (!editingZona) return;
 
@@ -119,13 +128,16 @@ const ZonasDistribuidores = () => {
     }
   };
 
+  // Eliminar zona + distribuidor
   const handleDelete = async (zonaId, distribuidorId) => {
     if (!window.confirm("¿Eliminar zona y distribuidor asociado?")) return;
 
     try {
-      await deleteZona(zonaId);
       if (distribuidorId) await deleteDistribuidor(distribuidorId);
+      await deleteZona(zonaId);
+
       refetchZonas();
+      setSearchTerm("");
       alert("Zona y distribuidor eliminados correctamente!");
     } catch (err) {
       console.error(err);
@@ -165,7 +177,7 @@ const ZonasDistribuidores = () => {
           return (
             <div key={zona.id} className="zona-card compact">
               <div className="zona-header">
-                <h3>{zona.name}</h3>
+                <h3 className="zona-title">{zona.name}</h3>
                 <div className="zona-actions">
                   <button onClick={() => handleDelete(zona.id, distribuidor?.id)}>
                     ✖
@@ -178,12 +190,10 @@ const ZonasDistribuidores = () => {
               {distribuidor ? (
                 <div className="distribuidor-card compact">
                   <p>
-                    <strong>Distribuidor:</strong> {distribuidor.name}{" "}
-                    {distribuidor.apellido}
+                    <strong>Distribuidor:</strong> {distribuidor.name} {distribuidor.apellido}
                   </p>
                   <p>
-                    <strong>DNI:</strong> {distribuidor.dni} |{" "}
-                    <strong>Valor entrega:</strong> ${distribuidor.valorEntrega}
+                    <strong>DNI:</strong> {distribuidor.dni} | <strong>Valor entrega:</strong> ${distribuidor.valorEntrega}
                   </p>
                 </div>
               ) : (
@@ -212,12 +222,7 @@ const ZonasDistribuidores = () => {
                 <input {...registerEdit("distribuidorName")} placeholder="Nombre" />
                 <input {...registerEdit("distribuidorApellido")} placeholder="Apellido" />
                 <input {...registerEdit("distribuidorDni")} placeholder="DNI" />
-                <input
-                  {...registerEdit("distribuidorValorEntrega")}
-                  placeholder="Valor de entrega"
-                  type="number"
-                  step="0.01"
-                />
+                <input {...registerEdit("distribuidorValorEntrega")} placeholder="Valor de entrega" type="number" step="0.01" />
               </div>
               <div className="modal-actions">
                 <button type="button" onClick={() => setEditModalOpen(false)}>
@@ -235,21 +240,12 @@ const ZonasDistribuidores = () => {
         <h2>Crear Nueva Zona con Distribuidor</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="form-create">
           <div className="form-section compact">
-            <h4>Zona</h4>
             <input {...register("zonaName")} placeholder="Nombre de la zona" />
             <input {...register("zonaDescription")} placeholder="Descripción" />
-          </div>
-          <div className="form-section compact">
-            <h4>Distribuidor</h4>
             <input {...register("distribuidorName")} placeholder="Nombre" />
             <input {...register("distribuidorApellido")} placeholder="Apellido" />
             <input {...register("distribuidorDni")} placeholder="DNI" />
-            <input
-              {...register("distribuidorValorEntrega")}
-              placeholder="Valor de entrega"
-              type="number"
-              step="0.01"
-            />
+            <input {...register("distribuidorValorEntrega")} placeholder="Valor de entrega" type="number" step="0.01" />
           </div>
           <button type="submit" className="btn-submit">
             Crear
