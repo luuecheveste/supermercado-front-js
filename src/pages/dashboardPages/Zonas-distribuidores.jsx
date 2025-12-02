@@ -45,7 +45,6 @@ const ZonasDistribuidores = () => {
     setDisplayedZonas(results || []);
   };
 
-  // Crear zona con distribuidor
   const onSubmit = async (data) => {
     try {
       const zonaCreada = await createZona({
@@ -64,14 +63,12 @@ const ZonasDistribuidores = () => {
 
       reset();
       refetchZonas();
-      alert("Zona y distribuidor creados correctamente");
     } catch (err) {
       console.error(err);
       alert("Error al crear zona o distribuidor");
     }
   };
 
-  // Editar zona y distribuidor
   const openEditModal = (zona) => {
     setEditingZona(zona);
     const distribuidor = zona.distribuidores?.[0] || null;
@@ -114,7 +111,6 @@ const ZonasDistribuidores = () => {
 
       refetchZonas();
       setEditModalOpen(false);
-      alert("Zona y distribuidor actualizados correctamente");
     } catch (err) {
       console.error(err);
       alert("Error al actualizar zona o distribuidor");
@@ -134,7 +130,8 @@ const ZonasDistribuidores = () => {
     }
   };
 
-  if (loadingZonas) return <p className="loading-message">Cargando zonas...</p>;
+  if (loadingZonas)
+    return <p className="loading-message">Cargando zonas...</p>;
 
   return (
     <div className="zonas-distribuidores-container">
@@ -155,13 +152,15 @@ const ZonasDistribuidores = () => {
       <div className="zonas-list">
         {displayedZonas.length === 0 && (
           <p className="empty-state">
-            {searchTerm ? "No se encontraron zonas" : "No hay zonas creadas"}
+            {searchTerm
+              ? "No se encontraron zonas"
+              : "No hay zonas creadas"}
           </p>
         )}
         {displayedZonas.map((zona) => {
           const distribuidor = zona.distribuidores?.[0] || null;
           return (
-            <div key={zona.id} className="zona-card">
+            <div key={zona.id} className="zona-card compact">
               <div className="zona-header">
                 <h3>{zona.name}</h3>
                 <div className="zona-actions">
@@ -174,7 +173,7 @@ const ZonasDistribuidores = () => {
               <p className="zona-description">{zona.description}</p>
 
               {distribuidor ? (
-                <div className="distribuidor-card">
+                <div className="distribuidor-card compact">
                   <p>
                     <strong>Distribuidor:</strong> {distribuidor.name}{" "}
                     {distribuidor.apellido}
@@ -185,7 +184,7 @@ const ZonasDistribuidores = () => {
                   </p>
                 </div>
               ) : (
-                <div className="distribuidor-card empty">
+                <div className="distribuidor-card empty compact">
                   <em>No hay distribuidor asociado</em>
                 </div>
               )}
@@ -197,24 +196,18 @@ const ZonasDistribuidores = () => {
       {/* Modal de edición */}
       {editModalOpen && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal compact">
             <h3>Editar Zona y Distribuidor</h3>
             <form onSubmit={handleSubmitEdit(onEditSubmit)} className="form-modal">
-              <div className="form-section">
-                <h4>Datos de la Zona</h4>
+              <div className="form-section compact">
+                <h4>Zona</h4>
                 <input {...registerEdit("zonaName")} placeholder="Nombre de la zona" />
-                <input
-                  {...registerEdit("zonaDescription")}
-                  placeholder="Descripción"
-                />
+                <input {...registerEdit("zonaDescription")} placeholder="Descripción" />
               </div>
-              <div className="form-section">
-                <h4>Datos del Distribuidor</h4>
+              <div className="form-section compact">
+                <h4>Distribuidor</h4>
                 <input {...registerEdit("distribuidorName")} placeholder="Nombre" />
-                <input
-                  {...registerEdit("distribuidorApellido")}
-                  placeholder="Apellido"
-                />
+                <input {...registerEdit("distribuidorApellido")} placeholder="Apellido" />
                 <input {...registerEdit("distribuidorDni")} placeholder="DNI" />
                 <input
                   {...registerEdit("distribuidorValorEntrega")}
@@ -238,13 +231,13 @@ const ZonasDistribuidores = () => {
       <div className="nueva-zona">
         <h2>Crear Nueva Zona con Distribuidor</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="form-create">
-          <div className="form-section">
-            <h4>Datos de la Zona</h4>
+          <div className="form-section compact">
+            <h4>Zona</h4>
             <input {...register("zonaName")} placeholder="Nombre de la zona" />
             <input {...register("zonaDescription")} placeholder="Descripción" />
           </div>
-          <div className="form-section">
-            <h4>Datos del Distribuidor</h4>
+          <div className="form-section compact">
+            <h4>Distribuidor</h4>
             <input {...register("distribuidorName")} placeholder="Nombre" />
             <input {...register("distribuidorApellido")} placeholder="Apellido" />
             <input {...register("distribuidorDni")} placeholder="DNI" />
@@ -256,7 +249,7 @@ const ZonasDistribuidores = () => {
             />
           </div>
           <button type="submit" className="btn-submit">
-            Crear Zona y Distribuidor
+            Crear
           </button>
         </form>
       </div>

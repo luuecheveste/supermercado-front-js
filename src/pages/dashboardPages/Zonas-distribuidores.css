@@ -1,172 +1,159 @@
 /* Contenedor principal */
 .zonas-distribuidores-container {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 2rem auto;
-  padding: 2rem;
-  background: #fdfdfd;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', sans-serif;
-  color: #2c3e50;
-}
-
-/* Títulos */
-.zonas-distribuidores-container h1 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-
-/* Búsqueda */
-.search-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2rem;
-}
-.search-input {
-  width: 100%;
-  max-width: 600px;
-  padding: 1rem 1.2rem;
-  font-size: 1.1rem;
-  border: 1px solid #dce1e6;
+  padding: 1.5rem;
+  background: #ffffff;
   border-radius: 12px;
-  background-color: #f9f9f9;
-  transition: all 0.2s;
-}
-.search-input:focus {
-  outline: none;
-  border-color: #667eea;
-  background-color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', sans-serif;
 }
 
-/* Lista de zonas */
-.zonas-list h2 {
-  font-size: 1.7rem;
-  font-weight: 600;
+/* Título */
+.zonas-distribuidores-container h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-/* Card de zona */
-.zona-card {
+/* Búsqueda */
+.search-container {
+  margin-bottom: 1.5rem;
+}
+.search-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #dce1e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #2c3e50;
+  background-color: #f9f9f9;
+  transition: border 0.2s, background 0.2s;
+}
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background-color: #ffffff;
+  color: #2c3e50;
+}
+
+/* Lista de zonas */
+.zonas-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 1.8rem;
-  margin-bottom: 1.8rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s, box-shadow 0.2s;
+}
+.zona-card {
+  background: #f5f7fa;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
 }
 .zona-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
-
-/* Información zona */
-.zona-info {
-  font-size: 1.05rem;
-  font-weight: 500;
+.zona-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.zona-info div {
-  margin-bottom: 0.5rem;
+.zona-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
 }
-
-/* Información distribuidor */
-.distribuidor-info {
-  background: #eef2ff;
-  border-left: 5px solid #667eea;
-  border-radius: 12px;
-  padding: 1rem 1.2rem;
+.zona-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
   font-size: 1rem;
-  color: #495057;
+  margin-left: 0.3rem;
+  transition: transform 0.2s, color 0.2s;
 }
-.distribuidor-info.empty {
+.zona-actions button:hover {
+  transform: scale(1.2);
+}
+.zona-actions button:first-child:hover {
+  color: #e74c3c; /* eliminar */
+}
+.zona-actions button:last-child:hover {
+  color: #667eea; /* editar */
+}
+.zona-description {
+  font-size: 0.95rem;
+  color: #34495e;
+}
+
+/* Distribuidores */
+.distribuidor-card {
+  background: #ffffff;
+  border-left: 4px solid #667eea;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+.distribuidor-card.empty {
   font-style: italic;
   color: #6c757d;
 }
 
-/* Botones de acciones */
-.zona-actions {
-  align-self: flex-end;
-  display: flex;
-  gap: 0.7rem;
-}
-.zona-edit,
-.zona-delete {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.3rem;
-  padding: 0.3rem;
-  transition: transform 0.2s, color 0.2s;
-}
-.zona-edit:hover {
-  color: #667eea;
-  transform: scale(1.2);
-}
-.zona-delete:hover {
-  color: #e74c3c;
-  transform: scale(1.2);
-}
-
-/* Formulario de creación */
-.nueva-zona-distribuidor {
-  margin-top: 3rem;
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-.form-zona-distribuidor {
-  flex: 1 1 45%;
+/* Formularios */
+.form-section {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  background: #f9f9f9;
-  padding: 1.8rem;
-  border-radius: 16px;
-  border: 1px solid #e0e0e0;
+  gap: 0.8rem;
 }
-.form-zona-distribuidor h3 {
-  font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-.form-section input {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 1px solid #dce1e6;
-  border-radius: 10px;
+.form-section h4 {
+  margin: 0 0 0.5rem 0;
   font-size: 1rem;
-  margin-bottom: 0.8rem;
-  transition: all 0.2s;
+  font-weight: 600;
+  color: #2c3e50;
 }
-.form-section input:focus {
+input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #dce1e6;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #2c3e50;
+  background-color: #ffffff;
+}
+input:focus {
   outline: none;
   border-color: #667eea;
-  background: #fff;
+  background-color: #ffffff;
+  color: #2c3e50;
 }
 
 /* Botones */
-.form-zona-distribuidor button {
-  background: #667eea;
-  color: #fff;
-  padding: 0.9rem 1.5rem;
-  border-radius: 12px;
+button {
+  cursor: pointer;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
   border: none;
   font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
-.form-zona-distribuidor button:hover:not(:disabled) {
-  background: #5563c1;
-  transform: scale(1.03);
+button.btn-submit {
+  background-color: #667eea;
+  color: #ffffff;
 }
-.form-zona-distribuidor button:disabled {
-  background: #a8b4e0;
+button.btn-submit:hover:not(:disabled) {
+  background-color: #5563c1;
+}
+button:disabled {
+  background-color: #a8b4e0;
   cursor: not-allowed;
 }
 
@@ -174,7 +161,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,45 +170,39 @@
 }
 .modal {
   background: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
+  padding: 1.5rem;
+  border-radius: 10px;
   width: 90%;
-  max-width: 650px;
+  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
 }
 .modal h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1rem;
   text-align: center;
-  margin-bottom: 1.5rem;
+  color: #2c3e50;
 }
+
+/* Modal acciones */
 .modal-actions {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
   margin-top: 1rem;
 }
 .modal-actions button {
-  flex: 1;
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-}
-.modal-actions button[type="button"] {
-  background: #6c757d;
-  color: #fff;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
 }
 .modal-actions button[type="submit"] {
-  background: #667eea;
-  color: #fff;
+  background-color: #667eea;
+  color: #ffffff;
 }
-.modal-actions button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.modal-actions button[type="button"] {
+  background-color: #6c757d;
+  color: #ffffff;
 }
 
 /* Mensajes y estados */
@@ -229,28 +210,16 @@
 .empty-state {
   text-align: center;
   color: #6c757d;
-  padding: 2rem;
-}
-.empty-state {
-  background: #f8f9fa;
-  border-radius: 12px;
-  border: 2px dashed #dee2e6;
-  margin-top: 1rem;
+  padding: 1rem;
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .nueva-zona-distribuidor {
-    flex-direction: column;
-  }
-}
 @media (max-width: 768px) {
   .zona-card {
-    padding: 1.2rem;
+    padding: 0.8rem;
   }
-  .zona-actions {
-    justify-content: flex-end;
-    margin-bottom: 0.8rem;
+  .form-section {
+    padding: 0.8rem;
   }
 }
 @media (max-width: 480px) {
@@ -264,3 +233,4 @@
     width: 100%;
   }
 }
+
