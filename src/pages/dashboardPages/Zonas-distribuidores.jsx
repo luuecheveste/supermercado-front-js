@@ -24,7 +24,6 @@ const ZonasDistribuidores = () => {
   const [editingDistribuidor, setEditingDistribuidor] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [displayedZonas, setDisplayedZonas] = useState([]);
-  const [message, setMessage] = useState(null); // <-- Mensajes de éxito/error
 
   const { register, handleSubmit, reset } = useForm();
   const {
@@ -36,11 +35,6 @@ const ZonasDistribuidores = () => {
   useEffect(() => {
     setDisplayedZonas(zonas || []);
   }, [zonas]);
-
-  const showMessage = (msg) => {
-    setMessage(msg);
-    setTimeout(() => setMessage(null), 3000);
-  };
 
   const handleSearch = async (e) => {
     const term = e.target.value;
@@ -69,10 +63,10 @@ const ZonasDistribuidores = () => {
 
       reset();
       refetchZonas();
-      showMessage("✅ Zona y distribuidor creados correctamente");
+      alert("Zona y distribuidor creados exitosamente!");
     } catch (err) {
       console.error(err);
-      showMessage("❌ Error al crear zona o distribuidor");
+      alert("Error al crear zona o distribuidor");
     }
   };
 
@@ -118,10 +112,10 @@ const ZonasDistribuidores = () => {
 
       refetchZonas();
       setEditModalOpen(false);
-      showMessage("✅ Zona y distribuidor actualizados correctamente");
+      alert("Zona y distribuidor actualizados correctamente!");
     } catch (err) {
       console.error(err);
-      showMessage("❌ Error al actualizar zona o distribuidor");
+      alert("Error al actualizar zona o distribuidor");
     }
   };
 
@@ -132,10 +126,10 @@ const ZonasDistribuidores = () => {
       await deleteZona(zonaId);
       if (distribuidorId) await deleteDistribuidor(distribuidorId);
       refetchZonas();
-      showMessage("✅ Zona y distribuidor eliminados correctamente");
+      alert("Zona y distribuidor eliminados correctamente!");
     } catch (err) {
       console.error(err);
-      showMessage("❌ Error al eliminar zona o distribuidor");
+      alert("Error al eliminar zona o distribuidor");
     }
   };
 
@@ -145,8 +139,6 @@ const ZonasDistribuidores = () => {
   return (
     <div className="zonas-distribuidores-container">
       <h1>Gestión de Zonas y Distribuidores</h1>
-
-      {message && <div className="alert-message">{message}</div>}
 
       {/* Búsqueda */}
       <div className="search-container">
@@ -212,40 +204,19 @@ const ZonasDistribuidores = () => {
             <form onSubmit={handleSubmitEdit(onEditSubmit)} className="form-modal">
               <div className="form-section compact">
                 <h4>Zona</h4>
-                <input
-                  {...registerEdit("zonaName")}
-                  placeholder="Nombre de la zona"
-                  className="input-field"
-                />
-                <input
-                  {...registerEdit("zonaDescription")}
-                  placeholder="Descripción"
-                  className="input-field"
-                />
+                <input {...registerEdit("zonaName")} placeholder="Nombre de la zona" />
+                <input {...registerEdit("zonaDescription")} placeholder="Descripción" />
               </div>
               <div className="form-section compact">
                 <h4>Distribuidor</h4>
-                <input
-                  {...registerEdit("distribuidorName")}
-                  placeholder="Nombre"
-                  className="input-field"
-                />
-                <input
-                  {...registerEdit("distribuidorApellido")}
-                  placeholder="Apellido"
-                  className="input-field"
-                />
-                <input
-                  {...registerEdit("distribuidorDni")}
-                  placeholder="DNI"
-                  className="input-field"
-                />
+                <input {...registerEdit("distribuidorName")} placeholder="Nombre" />
+                <input {...registerEdit("distribuidorApellido")} placeholder="Apellido" />
+                <input {...registerEdit("distribuidorDni")} placeholder="DNI" />
                 <input
                   {...registerEdit("distribuidorValorEntrega")}
                   placeholder="Valor de entrega"
                   type="number"
                   step="0.01"
-                  className="input-field"
                 />
               </div>
               <div className="modal-actions">
@@ -265,40 +236,19 @@ const ZonasDistribuidores = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="form-create">
           <div className="form-section compact">
             <h4>Zona</h4>
-            <input
-              {...register("zonaName")}
-              placeholder="Nombre de la zona"
-              className="input-field"
-            />
-            <input
-              {...register("zonaDescription")}
-              placeholder="Descripción"
-              className="input-field"
-            />
+            <input {...register("zonaName")} placeholder="Nombre de la zona" />
+            <input {...register("zonaDescription")} placeholder="Descripción" />
           </div>
           <div className="form-section compact">
             <h4>Distribuidor</h4>
-            <input
-              {...register("distribuidorName")}
-              placeholder="Nombre"
-              className="input-field"
-            />
-            <input
-              {...register("distribuidorApellido")}
-              placeholder="Apellido"
-              className="input-field"
-            />
-            <input
-              {...register("distribuidorDni")}
-              placeholder="DNI"
-              className="input-field"
-            />
+            <input {...register("distribuidorName")} placeholder="Nombre" />
+            <input {...register("distribuidorApellido")} placeholder="Apellido" />
+            <input {...register("distribuidorDni")} placeholder="DNI" />
             <input
               {...register("distribuidorValorEntrega")}
               placeholder="Valor de entrega"
               type="number"
               step="0.01"
-              className="input-field"
             />
           </div>
           <button type="submit" className="btn-submit">
