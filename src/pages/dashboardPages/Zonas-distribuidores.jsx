@@ -123,21 +123,21 @@ const ZonasDistribuidores = () => {
     if (!window.confirm("¿Eliminar zona y distribuidor asociado?")) return;
   
     try {
-      // Primero eliminamos al distribuidor asociado (si existe)
+      // Obtenemos la zona seleccionada y su distribuidor
       const zona = zonas.find((z) => z.id === zonaId);
       const distribuidorId = zona?.distribuidores?.[0]?.id;
   
-      if (distribuidorId) {
-        await deleteDistribuidor(distribuidorId);
-      }
+      // Eliminamos ambos en paralelo (si hay distribuidor)
+      await Promise.all([
+        distribuidorId ? deleteDistribuidor(distribuidorId) : Promise.resolve(),
+        deleteZona(zonaId)
+      ]);
   
-      // Luego eliminamos la zona
-      await deleteZona(zonaId);
+      // Refrescamos la lista inmediatamente
+      const nuevasZonas = await refetchZonas();
+      setDisplayedZonas(nuevasZonas || []);
   
-      // Refrescar zonas inmediatamente
-      await refetchZonas();
-  
-      // Mostrar mensaje de éxito
+      // Mensaje de éxito
       alert("Zona y distribuidor eliminados correctamente!");
     } catch (err) {
       console.error(err);
@@ -145,8 +145,9 @@ const ZonasDistribuidores = () => {
     }
   };
   
-  if (loadingZonas)
-    return <p className="loading-message">Cargando zonas...</p>;
+  
+if (loadingZonas)
+  return <p className="loading-message">Cargando zonas...</p>;
   
 
   return (
