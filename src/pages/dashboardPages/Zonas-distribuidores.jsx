@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import useZonas from '../../hooks/useZonas';
-import useDistribuidores from '../../hooks/useDistribuidores';
+import useDistribuidor from '../../hooks/useDistribuidor';
 import './Zonas-distribuidores.css';
 
 const ZonaDistribuidor = () => {
@@ -16,7 +16,7 @@ const ZonaDistribuidor = () => {
   } = useZonas();
 
   const [selectedZonaId, setSelectedZonaId] = useState(null);
-  const {createDistribuidor, updateDistribuidor, deleteDistribuidor } = useDistribuidores(selectedZonaId);
+  const {createDistribuidor, updateDistribuidor, deleteDistribuidor } = useDistribuidor(selectedZonaId);
 
   const [displayedZonas, setDisplayedZonas] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
